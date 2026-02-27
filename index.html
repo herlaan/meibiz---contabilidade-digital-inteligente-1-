@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MeiBiz | Contabilidade Digital Sem Burocracia</title>
+    <meta name="description" content="A contabilidade que seu negócio precisa, com a tecnologia que você merece. Abra sua empresa grátis." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Lufga', 'sans-serif'],
+            },
+            colors: {
+              brand: {
+                50: '#eff6ff',
+                100: '#dbeafe',
+                200: '#bfdbfe',
+                300: '#93c5fd',
+                400: '#60a5fa',
+                500: '#3b82f6', 
+                600: '#2563eb',
+                700: '#1d4ed8',
+                800: '#1e40af',
+                900: '#1e3a8a',
+                950: '#020617', 
+              },
+              accent: {
+                400: '#38bdf8', // Light Blue
+                500: '#0ea5e9', // Vibrant Blue for Buttons
+                600: '#0284c7', // Darker Blue hover
+              },
+              offwhite: '#F8FAFC',
+              dark: '#0f172a',
+            },
+            borderRadius: {
+              '4xl': '2rem',
+              '5xl': '2.5rem',
+            },
+            animation: {
+              'float': 'float 6s ease-in-out infinite',
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'marquee': 'marquee 30s linear infinite',
+              'marquee-slow': 'marquee 45s linear infinite',
+              'marquee-reverse': 'marquee-reverse 30s linear infinite',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-20px)' },
+              },
+              marquee: {
+                '0%': { transform: 'translateX(0)' },
+                '100%': { transform: 'translateX(-100%)' },
+              },
+              'marquee-reverse': {
+                '0%': { transform: 'translateX(-100%)' },
+                '100%': { transform: 'translateX(0%)' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        font-family: 'Lufga', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        background-color: #F8FAFC; /* Off-white base */
+      }
+      .scroll-smooth {
+        scroll-behavior: smooth;
+      }
+      
+      /* Pausar animação ao passar o mouse ou tocar */
+      .pause-on-hover:hover,
+      .pause-on-hover:focus-within {
+        animation-play-state: paused;
+      }
+
+      /* Custom gradient text */
+      .text-gradient {
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-image: linear-gradient(to right, #60a5fa, #ffffff);
+      }
+      
+      /* Animated Gradient Text */
+      .text-gradient-animated {
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-image: linear-gradient(to right, #60a5fa, #ffffff, #60a5fa);
+        background-size: 200% auto;
+        animation: gradient-move 3s linear infinite;
+      }
+      
+      @keyframes gradient-move {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
+      }
+
+      /* Scroll Animation Classes */
+      .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        filter: blur(5px);
+        will-change: transform, opacity, filter;
+      }
+      
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0) brightness(1.2); /* Brilho extra "digital" ao entrar */
+        transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      /* Scale Reveal Effect (New) */
+      .reveal-scale {
+        opacity: 0;
+        transform: scale(0.95) translateY(30px);
+        transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        will-change: transform, opacity;
+      }
+      .reveal-scale.active {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+
+      /* Keyframes for Immediate Animations (Fix for Tabs) */
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px) scale(0.95); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+      }
+      .animate-enter {
+        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      /* --- NOVOS EFEITOS TECH --- */
+      
+      /* Fundo de Grade Estilo Dashboard */
+      .bg-tech-grid {
+        background-size: 50px 50px;
+        background-image: 
+          linear-gradient(to right, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+      }
+
+      /* Animação da Linha de Varredura */
+      .tech-scan-line {
+        height: 1px;
+        width: 100%;
+        background: linear-gradient(90deg, transparent, #0ea5e9, transparent);
+        position: absolute;
+        top: 0;
+        animation: scan-move 3s infinite linear;
+      }
+
+      @keyframes scan-move {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+      }
+
+      /* Stagger delays */
+      .delay-100 { transition-delay: 100ms; }
+      .delay-200 { transition-delay: 200ms; }
+      .delay-300 { transition-delay: 300ms; }
+      .delay-400 { transition-delay: 400ms; }
+      .delay-500 { transition-delay: 500ms; }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/"
+  }
+}
+</script>
+</head>
+  <body class="text-slate-900 scroll-smooth selection:bg-brand-500 selection:text-white">
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
