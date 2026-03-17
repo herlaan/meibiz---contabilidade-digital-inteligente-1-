@@ -7,9 +7,16 @@ export interface Profile {
   id: string;
   full_name: string | null;
   email: string | null;
-  cnpj: string | null;
   company_name: string | null;
   plan_type: 'gratis' | 'completo' | string;
+  phone: string | null;
+  document_type: 'CPF' | 'CNPJ' | string | null;
+  document_number: string | null;
+  zip_code: string | null;
+  address: string | null;
+  monthly_revenue: string | null;
+  business_segment: string | null;
+  is_admin: boolean;
 }
 
 interface AuthContextType {

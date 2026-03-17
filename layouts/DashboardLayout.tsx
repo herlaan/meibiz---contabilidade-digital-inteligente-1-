@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { LayoutDashboard, Building2, FileText, Settings, LogOut, Menu, X, User } from 'lucide-react';
+import { OnboardingModal } from '../components/OnboardingModal';
 
 export const DashboardLayout: React.FC = () => {
   const { profile, signOut } = useAuth();
@@ -24,6 +25,7 @@ export const DashboardLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex font-sans">
+      <OnboardingModal />
       {/* Sidebar Desktop */}
       <aside className="hidden md:flex flex-col w-64 bg-slate-950 text-slate-300 border-r border-slate-800">
         <div className="p-6 flex items-center gap-3">
