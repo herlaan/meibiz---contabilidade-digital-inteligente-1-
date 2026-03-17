@@ -45,12 +45,34 @@ type MenuColumn = {
   items: MenuItem[];
 };
 
-export const Navbar: React.FC = () => {
+type ViewState = 'home' | 'cost-calculator' | 'pj-clt' | 'factor-r' | 'rpa' | 'tax-reform' | 'abrir-mei' | 'deixar-mei' | 'trocar-contador' | 'contabilidade-completa' | 'assessoria';
+
+interface NavbarProps {
+  onNavigate?: (view: ViewState) => void;
+  isLoggedIn?: boolean;
+  onToggleLogin?: () => void;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ onNavigate, isLoggedIn, onToggleLogin }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
   const [isMobileContentsOpen, setIsMobileContentsOpen] = useState(false);
   const [mobileStateListOpen, setMobileStateListOpen] = useState(false);
+
+  const handleNavSection = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
+    e.preventDefault();
+    setIsMobileMenuOpen(false);
+    if (onNavigate) {
+      onNavigate('home');
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,7 +86,7 @@ export const Navbar: React.FC = () => {
     {
       title: "Serviços de contabilidade:",
       items: [
-        { label: "Abrir empresa grátis" },
+        { label: "Abrir MEI Grátis" },
         { label: "Deixar de ser MEI" },
         { label: "Trocar de contador" },
         { label: "Contabilidade completa" },
@@ -121,7 +143,7 @@ export const Navbar: React.FC = () => {
       <div className={`mx-auto ${isScrolled ? 'w-full' : 'max-w-7xl'}`}>
         <div className="flex justify-between items-center">
           {/* Logo - changed font-bold to font-medium */}
-          <div className="flex-shrink-0 flex items-center gap-2 cursor-pointer">
+          <div className="flex-shrink-0 flex items-center gap-2 cursor-pointer" onClick={() => onNavigate?.('home')}>
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-medium text-xl transition-colors ${logoBgClass}`}>
               M
             </div>
@@ -173,7 +195,7 @@ export const Navbar: React.FC = () => {
                                     </div>
                                   </div>
                                 </>
-                              ) : (
+                              ) : item.href ? (
                                 <a
                                   href={item.href || "#"}
                                   target={item.href ? "_blank" : "_self"}
@@ -182,6 +204,19 @@ export const Navbar: React.FC = () => {
                                 >
                                   {item.label}
                                 </a>
+                              ) : (
+                                <button
+                                  onClick={() => {
+                                    if (item.label === "Abrir MEI Grátis") onNavigate?.('abrir-mei');
+                                    else if (item.label === "Deixar de ser MEI") onNavigate?.('deixar-mei');
+                                    else if (item.label === "Trocar de contador") onNavigate?.('trocar-contador');
+                                    else if (item.label === "Contabilidade completa") onNavigate?.('contabilidade-completa');
+                                    else if (item.label === "Assessoria Contábil") onNavigate?.('assessoria');
+                                  }}
+                                  className="text-slate-500 hover:text-brand-600 text-sm transition-colors block text-left"
+                                >
+                                  {item.label}
+                                </button>
                               )}
                             </li>
                           ))}
@@ -196,6 +231,7 @@ export const Navbar: React.FC = () => {
               <li>
                 <a
                   href="#planos"
+                  onClick={(e) => handleNavSection(e, 'planos')}
                   className={`font-medium transition-colors text-sm ${textColorClass}`}
                 >
                   Planos
@@ -222,9 +258,24 @@ export const Navbar: React.FC = () => {
                         <ul className="space-y-3">
                           {col.items.map((item, i) => (
                             <li key={i}>
-                              <a href={item.href || "#"} className="text-slate-500 hover:text-brand-600 text-sm transition-colors block">
+                              <button
+                                onClick={() => {
+                                  if (item.label.includes('Calculadora de Custo para abrir CNPJ')) {
+                                    onNavigate?.('cost-calculator');
+                                  } else if (item.label.includes('Calculadora PJ x CLT')) {
+                                    onNavigate?.('pj-clt');
+                                  } else if (item.label.includes('Calculadora de Fator R')) {
+                                    onNavigate?.('factor-r');
+                                  } else if (item.label.includes('Calculadora de RPA online')) {
+                                    onNavigate?.('rpa');
+                                  } else if (item.label.includes('Calculadora de Reforma Tributária')) {
+                                    onNavigate?.('tax-reform');
+                                  }
+                                }}
+                                className="text-slate-500 hover:text-brand-600 text-sm transition-colors block text-left w-full"
+                              >
                                 {item.label}
-                              </a>
+                              </button>
                             </li>
                           ))}
                         </ul>
@@ -238,6 +289,7 @@ export const Navbar: React.FC = () => {
               <li>
                 <a
                   href="#como-funciona"
+                  onClick={(e) => handleNavSection(e, 'como-funciona')}
                   className={`font-medium transition-colors text-sm ${textColorClass}`}
                 >
                   Como funciona
@@ -246,6 +298,7 @@ export const Navbar: React.FC = () => {
               <li>
                 <a
                   href="#faq"
+                  onClick={(e) => handleNavSection(e, 'faq')}
                   className={`font-medium transition-colors text-sm ${textColorClass}`}
                 >
                   Dúvidas?
@@ -257,9 +310,12 @@ export const Navbar: React.FC = () => {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-4">
-            <a href="#" className={`font-medium transition-colors text-sm hover:underline ${logoTextClass}`}>
-              Login
-            </a>
+            <button
+              onClick={onToggleLogin}
+              className={`font-medium transition-colors text-sm hover:underline ${logoTextClass}`}
+            >
+              {isLoggedIn ? 'Sair (Teste)' : 'Entrar (Teste)'}
+            </button>
             <Button variant={isScrolled ? 'primary' : 'white'} size="sm" className="font-medium">
               Abra sua empresa
             </Button>
@@ -323,7 +379,7 @@ export const Navbar: React.FC = () => {
                                 </div>
                               )}
                             </div>
-                          ) : (
+                          ) : item.href ? (
                             <a
                               href={item.href || "#"}
                               target={item.href ? "_blank" : "_self"}
@@ -332,6 +388,20 @@ export const Navbar: React.FC = () => {
                             >
                               {item.label}
                             </a>
+                          ) : (
+                            <button
+                              onClick={() => {
+                                setIsMobileMenuOpen(false);
+                                if (item.label === "Abrir MEI Grátis") onNavigate?.('abrir-mei');
+                                else if (item.label === "Deixar de ser MEI") onNavigate?.('deixar-mei');
+                                else if (item.label === "Trocar de contador") onNavigate?.('trocar-contador');
+                                else if (item.label === "Contabilidade completa") onNavigate?.('contabilidade-completa');
+                                else if (item.label === "Assessoria Contábil") onNavigate?.('assessoria');
+                              }}
+                              className="text-slate-600 hover:text-brand-600 text-sm block text-left w-full"
+                            >
+                              {item.label}
+                            </button>
                           )}
                         </li>
                       ))}
@@ -345,7 +415,7 @@ export const Navbar: React.FC = () => {
             <a
               href="#planos"
               className="block text-lg font-medium py-3 border-b border-slate-100 text-slate-600 hover:text-brand-600"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={(e) => handleNavSection(e, 'planos')}
             >
               Planos
             </a>
@@ -367,9 +437,29 @@ export const Navbar: React.FC = () => {
                     <ul className="space-y-3 pl-2 border-l-2 border-slate-200">
                       {col.items.map((item, i) => (
                         <li key={i}>
-                          <a href={item.href || "#"} className="text-slate-600 hover:text-brand-600 text-sm block">
+                          <button
+                            onClick={() => {
+                              if (item.label.includes('Calculadora de Custo para abrir CNPJ')) {
+                                onNavigate?.('cost-calculator');
+                                setIsMobileMenuOpen(false);
+                              } else if (item.label.includes('Calculadora PJ x CLT')) {
+                                onNavigate?.('pj-clt');
+                                setIsMobileMenuOpen(false);
+                              } else if (item.label.includes('Calculadora de Fator R')) {
+                                onNavigate?.('factor-r');
+                                setIsMobileMenuOpen(false);
+                              } else if (item.label.includes('Calculadora de RPA online')) {
+                                onNavigate?.('rpa');
+                                setIsMobileMenuOpen(false);
+                              } else if (item.label.includes('Calculadora de Reforma Tributária')) {
+                                onNavigate?.('tax-reform');
+                                setIsMobileMenuOpen(false);
+                              }
+                            }}
+                            className="text-slate-600 hover:text-brand-600 text-sm block text-left w-full"
+                          >
                             {item.label}
-                          </a>
+                          </button>
                         </li>
                       ))}
                     </ul>
@@ -382,20 +472,22 @@ export const Navbar: React.FC = () => {
             <a
               href="#como-funciona"
               className="block text-lg font-medium py-3 border-b border-slate-100 text-slate-600 hover:text-brand-600"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={(e) => handleNavSection(e, 'como-funciona')}
             >
               Como funciona
             </a>
             <a
               href="#faq"
               className="block text-lg font-medium py-3 border-b border-slate-100 text-slate-600 hover:text-brand-600"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={(e) => handleNavSection(e, 'faq')}
             >
               Dúvidas?
             </a>
 
             <div className="pt-6 flex flex-col gap-3">
-              <Button variant="outline" fullWidth>Login</Button>
+              <Button variant="outline" fullWidth onClick={() => { setIsMobileMenuOpen(false); onToggleLogin?.(); }}>
+                {isLoggedIn ? 'Sair (Teste)' : 'Entrar (Teste)'}
+              </Button>
               <Button variant="primary" fullWidth>Abra sua empresa</Button>
             </div>
           </div>
