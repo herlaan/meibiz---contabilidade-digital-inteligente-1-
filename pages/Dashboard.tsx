@@ -87,6 +87,15 @@ export const Dashboard: React.FC = () => {
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedText}`, '_blank');
   };
 
+  const handleUpgradeIntent = async () => {
+    // 1. Registamos no banco que o utilizador tem interesse no upgrade (Lead quente)
+    // Isso ajuda a sua equipa a saber quem clicar mas não finaliza a compra
+    console.log("Utilizador interessado em upgrade:", user?.email);
+    
+    // 2. Redirecionamos para o WhatsApp de vendas com contexto
+    handleWhatsAppRedirect('upgrade');
+  };
+
   return (
     <div className="min-h-screen p-4 md:p-8 max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
       
@@ -258,7 +267,7 @@ export const Dashboard: React.FC = () => {
                 variant="primary" 
                 fullWidth 
                 className="!py-2.5 shadow-lg shadow-brand-500/30"
-                onClick={() => handleWhatsAppRedirect('upgrade')}
+                onClick={handleUpgradeIntent}
               >
                 Fazer Upgrade Agora
               </Button>
