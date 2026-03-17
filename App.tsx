@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate, Navigate, Outlet } from 'react-router-dom';
+import { DashboardLayout } from './layouts/DashboardLayout';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -96,6 +97,20 @@ const HomePage: React.FC = () => {
   );
 };
 
+// Novo Layout Público (Casca para quem não está no Dashboard)
+const PublicLayout: React.FC = () => {
+  return (
+    <div className="min-h-screen flex flex-col w-full overflow-x-hidden font-sans text-slate-900 bg-slate-950">
+      <Navbar />
+      <main className="flex-grow bg-offwhite">
+        <Outlet />
+      </main>
+      <AiChatWidget />
+      <Footer />
+    </div>
+  );
+};
+
 // ProtectedRoute component for access control
 const ProtectedRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
   const { isLoggedIn, isLoading } = useAuth();
@@ -112,40 +127,36 @@ const ProtectedRoute: React.FC<{ element: React.ReactElement }> = ({ element }) 
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
-      
-      {/* Public Calculators */}
-      <Route path="/calculadora-custo-abertura" element={<CostCalculator />} />
-      <Route path="/calculadora-pj-clt" element={<NavigationWrapper element={PjCltCalculator} />} />
-      <Route path="/calculadora-fator-r" element={<NavigationWrapper element={FactorRCalculator} />} />
-      <Route path="/calculadora-rpa" element={<NavigationWrapper element={RpaCalculator} />} />
-      <Route path="/calculadora-reforma-tributaria" element={<NavigationWrapper element={TaxReformCalculator} />} />
-      <Route path="/abrir-mei-gratis" element={<NavigationWrapper element={OpenMeiFree} />} />
-      
-      {/* Auth Pages */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/cadastro" element={<Register />} />
-      
-      {/* Protected Routes */}
-      <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
-      <Route 
-        path="/deixar-de-ser-mei" 
-        element={<ProtectedRoute element={<NavigationWrapper element={LeaveMeiPage} />} />} 
-      />
-      <Route 
-        path="/trocar-de-contador" 
-        element={<ProtectedRoute element={<NavigationWrapper element={ChangeAccountantPage} />} />} 
-      />
-      <Route 
-        path="/contabilidade-completa" 
-        element={<ProtectedRoute element={<NavigationWrapper element={CompleteAccountingPage} />} />} 
-      />
-      <Route 
-        path="/assessoria-contabil" 
-        element={<ProtectedRoute element={<NavigationWrapper element={AccountingAdvisoryPage} />} />} 
-      />
+      {/* MUNDO PÚBLICO: Usa a Navbar e o Footer tradicionais */}
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<HomePage />} />
+        
+        {/* Calculadoras Públicas */}
+        <Route path="/calculadora-custo-abertura" element={<CostCalculator />} />
+        <Route path="/calculadora-pj-clt" element={<NavigationWrapper element={PjCltCalculator} />} />
+        <Route path="/calculadora-fator-r" element={<NavigationWrapper element={FactorRCalculator} />} />
+        <Route path="/calculadora-rpa" element={<NavigationWrapper element={RpaCalculator} />} />
+        <Route path="/calculadora-reforma-tributaria" element={<NavigationWrapper element={TaxReformCalculator} />} />
+        <Route path="/abrir-mei-gratis" element={<NavigationWrapper element={OpenMeiFree} />} />
+        
+        {/* Páginas de Autenticação */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/cadastro" element={<Register />} />
+        
+        {/* Serviços Públicos */}
+        <Route path="/deixar-de-ser-mei" element={<NavigationWrapper element={LeaveMeiPage} />} />
+        <Route path="/trocar-de-contador" element={<NavigationWrapper element={ChangeAccountantPage} />} />
+        <Route path="/contabilidade-completa" element={<NavigationWrapper element={CompleteAccountingPage} />} />
+        <Route path="/assessoria-contabil" element={<NavigationWrapper element={AccountingAdvisoryPage} />} />
+      </Route>
 
-      <Route path="/auth/callback" element={<Navigate to="/" replace />} />
+      {/* MUNDO PRIVADO (SaaS): Usa a Sidebar e esconde a Navbar/Footer */}
+      <Route element={<ProtectedRoute element={<DashboardLayout />} />}>
+        {/* O Dashboard será renderizado DENTRO do DashboardLayout */}
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Route>
+
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };
@@ -155,14 +166,7 @@ const App: React.FC = () => {
     <AuthProvider>
       <Router>
         <ScrollToTop />
-        <div className="min-h-screen flex flex-col w-full overflow-x-hidden font-sans text-slate-900 bg-slate-950">
-          <Navbar />
-          <main className="flex-grow bg-offwhite">
-            <AppRoutes />
-          </main>
-          <AiChatWidget />
-          <Footer />
-        </div>
+        <AppRoutes />
       </Router>
     </AuthProvider>
   );
