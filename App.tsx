@@ -147,9 +147,9 @@ const App: React.FC = () => {
     <AuthProvider>
       <Router>
         <ScrollToTop />
-        <div className="min-h-screen flex flex-col w-full overflow-x-hidden font-sans text-slate-900 bg-offwhite">
+        <div className="min-h-screen flex flex-col w-full overflow-x-hidden font-sans text-slate-900 bg-slate-950">
           <Navbar />
-          <main className="flex-grow">
+          <main className="flex-grow bg-offwhite">
             <AppRoutes />
           </main>
           <AiChatWidget />

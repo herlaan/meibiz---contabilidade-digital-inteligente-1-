@@ -49,7 +49,7 @@ type MenuColumn = {
 };
 
 export const Navbar: React.FC = () => {
-  const { isLoggedIn, login, logout, user } = useAuth();
+  const { isLoggedIn, login, logout, signOut, user } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
@@ -58,6 +58,12 @@ export const Navbar: React.FC = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await signOut();
+    setIsMobileMenuOpen(false);
+    navigate('/');
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -234,23 +240,35 @@ export const Navbar: React.FC = () => {
             </ul>
           </nav>
 
-          {/* Desktop Auth */}
           <div className="hidden lg:flex items-center gap-4">
             {isLoggedIn ? (
               <div className="flex items-center gap-4">
                 <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${isScrolled ? 'bg-slate-100 border-slate-200 text-slate-700' : 'bg-white/10 border-white/20 text-white'}`}>
                   <User size={16} />
-                  <span className="text-sm font-medium">{user?.name || 'Painel'}</span>
+                  <span className="text-sm font-medium">{user?.user_metadata?.name || user?.email?.split('@')[0] || 'Usuário'}</span>
                 </div>
-                <button onClick={logout} className="p-2 rounded-full hover:bg-red-500/10 text-red-500 transition-colors" title="Sair">
+                <Link 
+                  to="/dashboard" 
+                  className={`text-sm font-medium transition-colors ${textColorClass} hover:underline`}
+                >
+                  Painel
+                </Link>
+                <button 
+                  onClick={handleLogout} 
+                  className="p-2 rounded-full hover:bg-red-500/10 text-red-500 transition-colors" 
+                  title="Sair"
+                >
                   <LogOut size={20} />
                 </button>
               </div>
             ) : (
               <div className="flex items-center gap-3">
-                <button onClick={login} className={`font-medium transition-colors text-sm hover:underline ${textColorClass}`}>
-                  Login
-                </button>
+                <Link 
+                  to="/login" 
+                  className={`font-medium transition-colors text-sm hover:underline ${textColorClass}`}
+                >
+                  Entrar
+                </Link>
                 <Button variant={isScrolled ? 'primary' : 'white'} size="sm" className="font-medium rounded-full px-6">
                   Começar agora
                 </Button>
@@ -349,22 +367,33 @@ export const Navbar: React.FC = () => {
                 <div className="space-y-3">
                   <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl">
                     <div className="w-12 h-12 rounded-full bg-brand-600 text-white flex items-center justify-center text-lg font-bold">
-                      {user?.name?.[0] || 'U'}
+                      {user?.user_metadata?.name?.[0] || user?.email?.[0]?.toUpperCase() || 'U'}
                     </div>
                     <div>
-                      <div className="font-bold text-slate-900">{user?.name}</div>
-                      <div className="text-xs text-slate-500">{user?.email}</div>
+                      <div className="font-bold text-slate-900 truncate max-w-[200px]">{user?.user_metadata?.name || user?.email?.split('@')[0]}</div>
+                      <div className="text-xs text-slate-500 truncate max-w-[200px]">{user?.email}</div>
                     </div>
                   </div>
-                  <button onClick={() => { logout(); setIsMobileMenuOpen(false); }} className="w-full py-4 rounded-2xl border border-red-100 text-red-500 font-bold flex items-center justify-center gap-2">
+                  <Link 
+                    to="/dashboard" 
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full py-4 rounded-2xl border border-slate-200 text-slate-700 font-bold text-center block"
+                  >
+                    Painel de Controle
+                  </Link>
+                  <button onClick={handleLogout} className="w-full py-4 rounded-2xl border border-red-100 text-red-500 font-bold flex items-center justify-center gap-2">
                     <LogOut size={20} /> Sair
                   </button>
                 </div>
               ) : (
                 <>
-                  <button onClick={() => { login(); setIsMobileMenuOpen(false); }} className="w-full py-4 rounded-2xl border border-slate-200 text-slate-700 font-bold">
-                    Login
-                  </button>
+                  <Link 
+                    to="/login"
+                    onClick={() => setIsMobileMenuOpen(false)} 
+                    className="w-full py-4 rounded-2xl border border-slate-200 text-slate-700 font-bold text-center block"
+                  >
+                    Entrar
+                  </Link>
                   <Button variant="primary" fullWidth className="py-4 rounded-2xl">
                     Abrir minha empresa
                   </Button>
