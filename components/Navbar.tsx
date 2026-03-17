@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, ChevronDown, ChevronUp, ChevronRight } from 'lucide-react';
+import { Menu, X, ChevronDown, ChevronUp, ChevronRight, LogOut, User } from 'lucide-react';
 import { Button } from './Button';
+import { useAuth } from '../contexts/AuthContext';
 
 const CCC_URL = 'https://dfe-portal.svrs.rs.gov.br/Nfe/Ccc';
 
@@ -29,7 +30,6 @@ const brazilStates = [
   { uf: 'RS', name: 'Rio Grande do Sul', href: 'https://www.sefaz.rs.gov.br/consultas/contribuinte' },
   { uf: 'RO', name: 'Rondônia', href: 'https://portalcontribuinte.sefin.ro.gov.br/Publico/parametropublica.jsp' },
   { uf: 'RR', name: 'Roraima', href: 'https://portalweb.sefaz.rr.gov.br/sintegra/servlet/wp_siate_consultasintegra' },
-  { uf: 'RR', name: 'Roraima', href: 'https://portalweb.sefaz.rr.gov.br/sintegra/servlet/wp_siate_consultasintegra' },
   { uf: 'SC', name: 'Santa Catarina', href: 'https://sat.sef.sc.gov.br/tax.NET/tax.net.cadastro/conssc_sitcad.aspx' },
   { uf: 'SP', name: 'São Paulo', href: 'https://www.cadesp.fazenda.sp.gov.br/(S(gh1x0gzmwq5esd0ijx1ygt1o))/Pages/Cadastro/Consultas/ConsultaPublica/ConsultaPublica.aspx' },
   { uf: 'SE', name: 'Sergipe', href: 'https://security.sefaz.se.gov.br/SIC/sintegra/index.jsp' },
@@ -48,12 +48,8 @@ type MenuColumn = {
   items: MenuItem[];
 };
 
-interface NavbarProps {
-  isLoggedIn?: boolean;
-  onToggleLogin?: () => void;
-}
-
-export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onToggleLogin }) => {
+export const Navbar: React.FC = () => {
+  const { isLoggedIn, login, logout, user } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
@@ -115,7 +111,6 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onToggleLogin }) => 
     }
   ];
 
-  // Adjust text colors based on scroll state
   const textColorClass = isScrolled ? 'text-slate-700 hover:text-brand-600' : 'text-white/90 hover:text-white';
   const logoTextClass = isScrolled ? 'text-slate-900' : 'text-white';
   const mobileTextClass = isScrolled ? 'text-slate-900' : 'text-white';
@@ -144,20 +139,12 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onToggleLogin }) => 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center">
             <ul className="flex items-center space-x-8">
-
-              {/* Dropdown Menu - Serviços */}
               <li className="relative group">
-                <button
-                  className={`flex items-center gap-1 font-medium transition-colors text-sm focus:outline-none py-2 ${textColorClass}`}
-                >
+                <button className={`flex items-center gap-1 font-medium transition-colors text-sm focus:outline-none py-2 ${textColorClass}`}>
                   Serviços <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-300" />
                 </button>
-
-                {/* Dropdown Container */}
                 <div className="absolute top-full left-0 w-[750px] bg-white rounded-2xl shadow-2xl border border-slate-100 p-8 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-4 group-hover:translate-y-0 mt-2 z-50 cursor-default">
-                  {/* Triangle Indicator */}
                   <div className="absolute top-0 left-8 -mt-2 w-4 h-4 bg-white border-t border-l border-slate-100 transform rotate-45"></div>
-
                   <div className="grid grid-cols-2 gap-8">
                     {serviceColumns.map((col, idx) => (
                       <div key={idx}>
@@ -170,7 +157,6 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onToggleLogin }) => 
                                   <button className="text-slate-500 hover:text-brand-600 text-sm transition-colors w-full text-left flex items-center justify-between">
                                     {item.label} <ChevronRight size={14} />
                                   </button>
-                                  {/* Sub-menu de Estados */}
                                   <div className="absolute left-full top-0 pl-2 w-[480px] hidden group-hover/state:block z-[60]">
                                     <div className="bg-white border border-slate-100 shadow-xl rounded-xl p-6">
                                       <h5 className="font-medium text-slate-900 mb-4 text-xs uppercase tracking-wide border-b border-slate-100 pb-2">Selecione o Estado</h5>
@@ -185,19 +171,11 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onToggleLogin }) => 
                                   </div>
                                 </>
                               ) : item.href ? (
-                                <a
-                                  href={item.href || "#"}
-                                  target={item.href ? "_blank" : "_self"}
-                                  rel={item.href ? "noreferrer" : ""}
-                                  className="text-slate-500 hover:text-brand-600 text-sm transition-colors block"
-                                >
+                                <a href={item.href} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-brand-600 text-sm transition-colors block">
                                   {item.label}
                                 </a>
                               ) : item.to ? (
-                                <Link
-                                  to={item.to}
-                                  className="text-slate-500 hover:text-brand-600 text-sm transition-colors block text-left"
-                                >
+                                <Link to={item.to} className="text-slate-500 hover:text-brand-600 text-sm transition-colors block text-left">
                                   {item.label}
                                 </Link>
                               ) : (
@@ -214,29 +192,18 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onToggleLogin }) => 
                 </div>
               </li>
 
-              {/* Link Simples - Planos */}
               <li>
-                <Link
-                  to="/#planos"
-                  className={`font-medium transition-colors text-sm ${textColorClass}`}
-                >
+                <Link to="/#planos" className={`font-medium transition-colors text-sm ${textColorClass}`}>
                   Planos
                 </Link>
               </li>
 
-              {/* Dropdown Menu - Conteúdos */}
               <li className="relative group">
-                <button
-                  className={`flex items-center gap-1 font-medium transition-colors text-sm focus:outline-none py-2 ${textColorClass}`}
-                >
+                <button className={`flex items-center gap-1 font-medium transition-colors text-sm focus:outline-none py-2 ${textColorClass}`}>
                   Conteúdos <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-300" />
                 </button>
-
-                {/* Dropdown Container */}
                 <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-[750px] bg-white rounded-2xl shadow-2xl border border-slate-100 p-8 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-4 group-hover:translate-y-0 mt-2 z-50 cursor-default">
-                  {/* Triangle Indicator */}
                   <div className="absolute top-0 left-1/2 -ml-2 -mt-2 w-4 h-4 bg-white border-t border-l border-slate-100 transform rotate-45"></div>
-
                   <div className="grid grid-cols-2 gap-8">
                     {contentColumns.map((col, idx) => (
                       <div key={idx}>
@@ -245,16 +212,11 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onToggleLogin }) => 
                           {col.items.map((item, i) => (
                             <li key={i}>
                               {item.to ? (
-                                <Link
-                                  to={item.to}
-                                  className="text-slate-500 hover:text-brand-600 text-sm transition-colors block text-left w-full"
-                                >
+                                <Link to={item.to} className="text-slate-500 hover:text-brand-600 text-sm transition-colors block text-left w-full">
                                   {item.label}
                                 </Link>
                               ) : (
-                                <button
-                                  className="text-slate-500 hover:text-brand-600 text-sm transition-colors block text-left w-full"
-                                >
+                                <button className="text-slate-500 hover:text-brand-600 text-sm transition-colors block text-left w-full">
                                   {item.label}
                                 </button>
                               )}
@@ -267,38 +229,33 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onToggleLogin }) => 
                 </div>
               </li>
 
-              {/* Other Links */}
-              <li>
-                <Link
-                  to="/#como-funciona"
-                  className={`font-medium transition-colors text-sm ${textColorClass}`}
-                >
-                  Como funciona
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/#faq"
-                  className={`font-medium transition-colors text-sm ${textColorClass}`}
-                >
-                  Dúvidas?
-                </Link>
-              </li>
-
+              <li><Link to="/#como-funciona" className={`font-medium transition-colors text-sm ${textColorClass}`}>Como funciona</Link></li>
+              <li><Link to="/#faq" className={`font-medium transition-colors text-sm ${textColorClass}`}>Dúvidas?</Link></li>
             </ul>
           </nav>
 
-          {/* Desktop CTA */}
+          {/* Desktop Auth */}
           <div className="hidden lg:flex items-center gap-4">
-            <button
-              onClick={onToggleLogin}
-              className={`font-medium transition-colors text-sm hover:underline ${logoTextClass}`}
-            >
-              {isLoggedIn ? 'Sair (Teste)' : 'Entrar (Teste)'}
-            </button>
-            <Button variant={isScrolled ? 'primary' : 'white'} size="sm" className="font-medium">
-              Abra sua empresa
-            </Button>
+            {isLoggedIn ? (
+              <div className="flex items-center gap-4">
+                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${isScrolled ? 'bg-slate-100 border-slate-200 text-slate-700' : 'bg-white/10 border-white/20 text-white'}`}>
+                  <User size={16} />
+                  <span className="text-sm font-medium">{user?.name || 'Painel'}</span>
+                </div>
+                <button onClick={logout} className="p-2 rounded-full hover:bg-red-500/10 text-red-500 transition-colors" title="Sair">
+                  <LogOut size={20} />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <button onClick={login} className={`font-medium transition-colors text-sm hover:underline ${textColorClass}`}>
+                  Login
+                </button>
+                <Button variant={isScrolled ? 'primary' : 'white'} size="sm" className="font-medium rounded-full px-6">
+                  Começar agora
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -315,19 +272,12 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onToggleLogin }) => 
 
       {/* Mobile Menu Dropdown */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden bg-white/95 backdrop-blur-md border-t absolute top-full left-0 right-0 h-[calc(100vh-80px)] overflow-y-auto px-4 pt-4 text-slate-900 pb-20 shadow-xl rounded-b-2xl mt-2">
+        <div className="lg:hidden bg-white/98 backdrop-blur-md border-t absolute top-full left-0 right-0 h-[calc(100vh-80px)] overflow-y-auto px-4 pt-4 text-slate-900 pb-20 shadow-xl rounded-b-2xl mt-2">
           <div className="space-y-2">
-
-            {/* Mobile Services Accordion */}
             <div className="border-b border-slate-100 pb-2">
-              <button
-                onClick={() => setIsMobileServicesOpen(!isMobileServicesOpen)}
-                className="w-full flex justify-between items-center text-lg font-medium py-3 text-slate-900"
-              >
-                Serviços
-                {isMobileServicesOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+              <button onClick={() => setIsMobileServicesOpen(!isMobileServicesOpen)} className="w-full flex justify-between items-center text-lg font-medium py-3 text-slate-900">
+                Serviços {isMobileServicesOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
               </button>
-
               <div className={`space-y-6 overflow-hidden transition-all duration-300 ${isMobileServicesOpen ? 'max-h-[1000px] pb-4 opacity-100' : 'max-h-0 opacity-0'}`}>
                 {serviceColumns.map((col, idx) => (
                   <div key={idx} className="bg-slate-50 p-4 rounded-xl">
@@ -337,22 +287,13 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onToggleLogin }) => 
                         <li key={i}>
                           {item.isStateList ? (
                             <div>
-                              <button
-                                onClick={() => setMobileStateListOpen(!mobileStateListOpen)}
-                                className="text-slate-600 hover:text-brand-600 text-sm flex items-center w-full justify-between"
-                              >
+                              <button onClick={() => setMobileStateListOpen(!mobileStateListOpen)} className="text-slate-600 text-sm flex items-center w-full justify-between">
                                 {item.label} {mobileStateListOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                               </button>
                               {mobileStateListOpen && (
                                 <div className="mt-4 grid grid-cols-2 gap-2 pl-3 border-l-2 border-brand-100">
                                   {brazilStates.map((st) => (
-                                    <a
-                                      key={st.uf}
-                                      href={st.href}
-                                      target="_blank"
-                                      rel="noreferrer"
-                                      className="text-xs text-slate-500 hover:text-brand-600 py-1.5 block font-medium"
-                                    >
+                                    <a key={st.uf} href={st.href} target="_blank" rel="noreferrer" className="text-xs text-slate-500 py-1.5 block font-medium">
                                       {st.name} ({st.uf})
                                     </a>
                                   ))}
@@ -360,28 +301,11 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onToggleLogin }) => 
                               )}
                             </div>
                           ) : item.href ? (
-                            <a
-                              href={item.href || "#"}
-                              target={item.href ? "_blank" : "_self"}
-                              rel={item.href ? "noreferrer" : ""}
-                              className="text-slate-600 hover:text-brand-600 text-sm block"
-                            >
-                              {item.label}
-                            </a>
+                            <a href={item.href} target="_blank" rel="noreferrer" className="text-slate-600 text-sm block">{item.label}</a>
                           ) : item.to ? (
-                            <Link
-                              to={item.to}
-                              onClick={() => setIsMobileMenuOpen(false)}
-                              className="text-slate-600 hover:text-brand-600 text-sm block text-left w-full"
-                            >
-                              {item.label}
-                            </Link>
+                            <Link to={item.to} onClick={() => setIsMobileMenuOpen(false)} className="text-slate-600 text-sm block">{item.label}</Link>
                           ) : (
-                            <button
-                              className="text-slate-600 hover:text-brand-600 text-sm block text-left w-full"
-                            >
-                              {item.label}
-                            </button>
+                            <button className="text-slate-600 text-sm block">{item.label}</button>
                           )}
                         </li>
                       ))}
@@ -391,25 +315,12 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onToggleLogin }) => 
               </div>
             </div>
 
-            {/* Mobile Planos Link */}
-            <Link
-              to="/#planos"
-              className="block text-lg font-medium py-3 border-b border-slate-100 text-slate-600 hover:text-brand-600"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Planos
-            </Link>
+            <Link to="/#planos" className="block text-lg font-medium py-3 border-b border-slate-100 text-slate-600" onClick={() => setIsMobileMenuOpen(false)}>Planos</Link>
 
-            {/* Mobile Conteúdos Accordion */}
             <div className="border-b border-slate-100 pb-2">
-              <button
-                onClick={() => setIsMobileContentsOpen(!isMobileContentsOpen)}
-                className="w-full flex justify-between items-center text-lg font-medium py-3 text-slate-900"
-              >
-                Conteúdos
-                {isMobileContentsOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+              <button onClick={() => setIsMobileContentsOpen(!isMobileContentsOpen)} className="w-full flex justify-between items-center text-lg font-medium py-3 text-slate-900">
+                Conteúdos {isMobileContentsOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
               </button>
-
               <div className={`space-y-6 overflow-hidden transition-all duration-300 ${isMobileContentsOpen ? 'max-h-[1000px] pb-4 opacity-100' : 'max-h-0 opacity-0'}`}>
                 {contentColumns.map((col, idx) => (
                   <div key={idx} className="bg-slate-50 p-4 rounded-xl">
@@ -418,19 +329,9 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onToggleLogin }) => 
                       {col.items.map((item, i) => (
                         <li key={i}>
                           {item.to ? (
-                            <Link
-                              to={item.to}
-                              onClick={() => setIsMobileMenuOpen(false)}
-                              className="text-slate-600 hover:text-brand-600 text-sm block text-left w-full"
-                            >
-                              {item.label}
-                            </Link>
+                            <Link to={item.to} onClick={() => setIsMobileMenuOpen(false)} className="text-slate-600 text-sm block">{item.label}</Link>
                           ) : (
-                            <button
-                              className="text-slate-600 hover:text-brand-600 text-sm block text-left w-full"
-                            >
-                              {item.label}
-                            </button>
+                            <button className="text-slate-600 text-sm block">{item.label}</button>
                           )}
                         </li>
                       ))}
@@ -440,27 +341,35 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onToggleLogin }) => 
               </div>
             </div>
 
-            {/* Other Mobile Links */}
-            <Link
-              to="/#como-funciona"
-              className="block text-lg font-medium py-3 border-b border-slate-100 text-slate-600 hover:text-brand-600"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Como funciona
-            </Link>
-            <Link
-              to="/#faq"
-              className="block text-lg font-medium py-3 border-b border-slate-100 text-slate-600 hover:text-brand-600"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Dúvidas?
-            </Link>
+            <Link to="/#como-funciona" className="block text-lg font-medium py-3 border-b border-slate-100 text-slate-600" onClick={() => setIsMobileMenuOpen(false)}>Como funciona</Link>
+            <Link to="/#faq" className="block text-lg font-medium py-3 border-b border-slate-100 text-slate-600" onClick={() => setIsMobileMenuOpen(false)}>Dúvidas?</Link>
 
             <div className="pt-6 flex flex-col gap-3">
-              <Button variant="outline" fullWidth onClick={() => { setIsMobileMenuOpen(false); onToggleLogin?.(); }}>
-                {isLoggedIn ? 'Sair (Teste)' : 'Entrar (Teste)'}
-              </Button>
-              <Button variant="primary" fullWidth>Abra sua empresa</Button>
+              {isLoggedIn ? (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl">
+                    <div className="w-12 h-12 rounded-full bg-brand-600 text-white flex items-center justify-center text-lg font-bold">
+                      {user?.name?.[0] || 'U'}
+                    </div>
+                    <div>
+                      <div className="font-bold text-slate-900">{user?.name}</div>
+                      <div className="text-xs text-slate-500">{user?.email}</div>
+                    </div>
+                  </div>
+                  <button onClick={() => { logout(); setIsMobileMenuOpen(false); }} className="w-full py-4 rounded-2xl border border-red-100 text-red-500 font-bold flex items-center justify-center gap-2">
+                    <LogOut size={20} /> Sair
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <button onClick={() => { login(); setIsMobileMenuOpen(false); }} className="w-full py-4 rounded-2xl border border-slate-200 text-slate-700 font-bold">
+                    Login
+                  </button>
+                  <Button variant="primary" fullWidth className="py-4 rounded-2xl">
+                    Abrir minha empresa
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>

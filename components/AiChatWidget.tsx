@@ -1,9 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Bot, User, Loader2, Sparkles, AlertCircle } from 'lucide-react';
-
-interface AiChatWidgetProps {
-    isLoggedIn: boolean;
-}
+import { useAuth } from '../contexts/AuthContext';
 
 interface Message {
     id: string;
@@ -12,7 +9,8 @@ interface Message {
     timestamp: Date;
 }
 
-export const AiChatWidget: React.FC<AiChatWidgetProps> = ({ isLoggedIn }) => {
+export const AiChatWidget: React.FC = () => {
+    const { isLoggedIn } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
         {

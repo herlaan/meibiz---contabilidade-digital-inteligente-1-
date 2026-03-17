@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { MeiOpportunity } from './components/MeiOpportunity';
@@ -92,34 +93,70 @@ const HomePage: React.FC = () => {
   );
 };
 
-const App: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-  const toggleLogin = () => setIsLoggedIn(!isLoggedIn);
+// ProtectedRoute component for access control
+const ProtectedRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
+  const { isLoggedIn, isLoading } = useAuth();
+  
+  if (isLoading) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">Carregando...</div>;
+  
+  if (!isLoggedIn) {
+    // Redirect to home and try to scroll to plans after a short delay via state or hash
+    return <Navigate to="/#planos" replace />;
+  }
+  return element;
+};
 
+const AppRoutes: React.FC = () => {
   return (
-    <Router>
-      <ScrollToTop />
-      <div className="min-h-screen flex flex-col w-full overflow-x-hidden font-sans text-slate-900 bg-offwhite">
-        <Navbar isLoggedIn={isLoggedIn} onToggleLogin={toggleLogin} />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/calculadora-custo-abertura" element={<CostCalculator />} />
-            <Route path="/calculadora-pj-clt" element={<NavigationWrapper element={PjCltCalculator} />} />
-            <Route path="/calculadora-fator-r" element={<NavigationWrapper element={FactorRCalculator} />} />
-            <Route path="/calculadora-rpa" element={<NavigationWrapper element={RpaCalculator} />} />
-            <Route path="/calculadora-reforma-tributaria" element={<NavigationWrapper element={TaxReformCalculator} />} />
-            <Route path="/abrir-mei-gratis" element={<NavigationWrapper element={OpenMeiFree} />} />
-            <Route path="/deixar-de-ser-mei" element={<NavigationWrapper element={LeaveMeiPage} />} />
-            <Route path="/trocar-de-contador" element={<NavigationWrapper element={ChangeAccountantPage} />} />
-            <Route path="/contabilidade-completa" element={<NavigationWrapper element={CompleteAccountingPage} />} />
-            <Route path="/assessoria-contabil" element={<NavigationWrapper element={AccountingAdvisoryPage} />} />
-          </Routes>
-        </main>
-        <AiChatWidget isLoggedIn={isLoggedIn} />
-        <Footer />
-      </div>
-    </Router>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      
+      {/* Public Calculators */}
+      <Route path="/calculadora-custo-abertura" element={<CostCalculator />} />
+      <Route path="/calculadora-pj-clt" element={<NavigationWrapper element={PjCltCalculator} />} />
+      <Route path="/calculadora-fator-r" element={<NavigationWrapper element={FactorRCalculator} />} />
+      <Route path="/calculadora-rpa" element={<NavigationWrapper element={RpaCalculator} />} />
+      <Route path="/calculadora-reforma-tributaria" element={<NavigationWrapper element={TaxReformCalculator} />} />
+      <Route path="/abrir-mei-gratis" element={<NavigationWrapper element={OpenMeiFree} />} />
+      
+      {/* Protected Routes */}
+      <Route 
+        path="/deixar-de-ser-mei" 
+        element={<ProtectedRoute element={<NavigationWrapper element={LeaveMeiPage} />} />} 
+      />
+      <Route 
+        path="/trocar-de-contador" 
+        element={<ProtectedRoute element={<NavigationWrapper element={ChangeAccountantPage} />} />} 
+      />
+      <Route 
+        path="/contabilidade-completa" 
+        element={<ProtectedRoute element={<NavigationWrapper element={CompleteAccountingPage} />} />} 
+      />
+      <Route 
+        path="/assessoria-contabil" 
+        element={<ProtectedRoute element={<NavigationWrapper element={AccountingAdvisoryPage} />} />} 
+      />
+
+      <Route path="/auth/callback" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <AuthProvider>
+      <Router>
+        <ScrollToTop />
+        <div className="min-h-screen flex flex-col w-full overflow-x-hidden font-sans text-slate-900 bg-offwhite">
+          <Navbar />
+          <main className="flex-grow">
+            <AppRoutes />
+          </main>
+          <AiChatWidget />
+          <Footer />
+        </div>
+      </Router>
+    </AuthProvider>
   );
 };
 
