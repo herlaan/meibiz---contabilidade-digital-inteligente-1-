@@ -30,6 +30,9 @@ import { ChangeAccountantPage } from './components/ChangeAccountantPage';
 import { CompleteAccountingPage } from './components/CompleteAccountingPage';
 import { AccountingAdvisoryPage } from './components/AccountingAdvisoryPage';
 import { AiChatWidget } from './components/AiChatWidget';
+import { Login } from './pages/Login';
+import { Register } from './pages/Register';
+import { Dashboard } from './pages/Dashboard';
 
 // ScrollToTop component to handle window scroll and hash navigation
 const ScrollToTop: React.FC = () => {
@@ -119,7 +122,12 @@ const AppRoutes: React.FC = () => {
       <Route path="/calculadora-reforma-tributaria" element={<NavigationWrapper element={TaxReformCalculator} />} />
       <Route path="/abrir-mei-gratis" element={<NavigationWrapper element={OpenMeiFree} />} />
       
+      {/* Auth Pages */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/cadastro" element={<Register />} />
+      
       {/* Protected Routes */}
+      <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
       <Route 
         path="/deixar-de-ser-mei" 
         element={<ProtectedRoute element={<NavigationWrapper element={LeaveMeiPage} />} />} 

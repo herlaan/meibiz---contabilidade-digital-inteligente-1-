@@ -269,9 +269,11 @@ export const Navbar: React.FC = () => {
                 >
                   Entrar
                 </Link>
-                <Button variant={isScrolled ? 'primary' : 'white'} size="sm" className="font-medium rounded-full px-6">
-                  Começar agora
-                </Button>
+                <Link to="/cadastro">
+                  <Button variant={isScrolled ? 'primary' : 'white'} size="sm" className="font-medium rounded-full px-6">
+                    Começar agora
+                  </Button>
+                </Link>
               </div>
             )}
           </div>
@@ -394,9 +396,11 @@ export const Navbar: React.FC = () => {
                   >
                     Entrar
                   </Link>
-                  <Button variant="primary" fullWidth className="py-4 rounded-2xl">
-                    Abrir minha empresa
-                  </Button>
+                  <Link to="/cadastro" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button variant="primary" fullWidth className="py-4 rounded-2xl">
+                      Abrir minha empresa
+                    </Button>
+                  </Link>
                 </>
               )}
             </div>
