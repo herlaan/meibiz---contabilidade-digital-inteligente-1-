@@ -34,6 +34,7 @@ import { AiChatWidget } from './components/AiChatWidget';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Dashboard } from './pages/Dashboard';
+import { AdminDashboard } from './pages/AdminDashboard';
 
 // ScrollToTop component to handle window scroll and hash navigation
 const ScrollToTop: React.FC = () => {
@@ -124,6 +125,20 @@ const ProtectedRoute: React.FC<{ element: React.ReactElement }> = ({ element }) 
   return element;
 };
 
+// Componente para proteger rotas exclusivas de Admin
+const AdminRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
+  const { profile, isLoading } = useAuth();
+
+  if (isLoading) return <div className="h-screen flex items-center justify-center font-sans text-slate-400">A validar permissões...</div>;
+  
+  // Se não for admin, volta para o Dashboard comum
+  if (!profile?.is_admin) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return element;
+};
+
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
@@ -154,6 +169,9 @@ const AppRoutes: React.FC = () => {
       <Route element={<ProtectedRoute element={<DashboardLayout />} />}>
         {/* O Dashboard será renderizado DENTRO do DashboardLayout */}
         <Route path="/dashboard" element={<Dashboard />} />
+        
+        {/* Rota de Admin protegida */}
+        <Route path="/admin" element={<AdminRoute element={<AdminDashboard />} />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

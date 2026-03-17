@@ -18,10 +18,12 @@ export const DashboardLayout: React.FC = () => {
 
   const menuItems = [
     { icon: LayoutDashboard, label: 'Painel Geral', path: '/dashboard' },
-    // Adicionaremos mais rotas no futuro:
-    // { icon: Building2, label: 'Minha Empresa', path: '/dashboard/empresa' },
-    // { icon: FileText, label: 'Documentos', path: '/dashboard/documentos' },
   ];
+
+  // Se for admin, injetamos a opção extra no menu
+  if (profile?.is_admin) {
+    menuItems.push({ icon: Settings, label: 'Admin / Clientes', path: '/admin' });
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 flex font-sans">
