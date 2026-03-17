@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ShieldCheck, Zap, Users, CheckCircle2 } from 'lucide-react';
 import { Button } from './Button';
 
@@ -59,9 +60,11 @@ export const Hero: React.FC = () => {
 
             {/* Botões CTA */}
             <div className="reveal delay-300 flex flex-col sm:flex-row gap-4 mb-12">
-              <Button size="lg" className="h-16 px-10 text-lg shadow-[0_10px_40px_-10px_rgba(14,165,233,0.5)] hover:shadow-[0_20px_40px_-10px_rgba(14,165,233,0.7)]">
-                Abra sua empresa grátis
-              </Button>
+              <Link to="/abrir-mei-gratis" className="w-full sm:w-auto">
+                <Button size="lg" className="h-16 px-10 text-lg shadow-[0_10px_40px_-10px_rgba(14,165,233,0.5)] hover:shadow-[0_20px_40px_-10px_rgba(14,165,233,0.7)] w-full">
+                  Abra sua empresa grátis
+                </Button>
+              </Link>
               <Button variant="outline" size="lg" className="h-16 px-10 text-lg border-white/10 text-white hover:bg-white/5 backdrop-blur-sm">
                 Fale com um contador
               </Button>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, ChevronDown, ChevronUp, ChevronRight } from 'lucide-react';
 import { Button } from './Button';
 
@@ -28,6 +29,7 @@ const brazilStates = [
   { uf: 'RS', name: 'Rio Grande do Sul', href: 'https://www.sefaz.rs.gov.br/consultas/contribuinte' },
   { uf: 'RO', name: 'Rondônia', href: 'https://portalcontribuinte.sefin.ro.gov.br/Publico/parametropublica.jsp' },
   { uf: 'RR', name: 'Roraima', href: 'https://portalweb.sefaz.rr.gov.br/sintegra/servlet/wp_siate_consultasintegra' },
+  { uf: 'RR', name: 'Roraima', href: 'https://portalweb.sefaz.rr.gov.br/sintegra/servlet/wp_siate_consultasintegra' },
   { uf: 'SC', name: 'Santa Catarina', href: 'https://sat.sef.sc.gov.br/tax.NET/tax.net.cadastro/conssc_sitcad.aspx' },
   { uf: 'SP', name: 'São Paulo', href: 'https://www.cadesp.fazenda.sp.gov.br/(S(gh1x0gzmwq5esd0ijx1ygt1o))/Pages/Cadastro/Consultas/ConsultaPublica/ConsultaPublica.aspx' },
   { uf: 'SE', name: 'Sergipe', href: 'https://security.sefaz.se.gov.br/SIC/sintegra/index.jsp' },
@@ -37,6 +39,7 @@ const brazilStates = [
 type MenuItem = {
   label: string;
   href?: string;
+  to?: string;
   isStateList?: boolean;
 };
 
@@ -45,34 +48,20 @@ type MenuColumn = {
   items: MenuItem[];
 };
 
-type ViewState = 'home' | 'cost-calculator' | 'pj-clt' | 'factor-r' | 'rpa' | 'tax-reform' | 'abrir-mei' | 'deixar-mei' | 'trocar-contador' | 'contabilidade-completa' | 'assessoria';
-
 interface NavbarProps {
-  onNavigate?: (view: ViewState) => void;
   isLoggedIn?: boolean;
   onToggleLogin?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onNavigate, isLoggedIn, onToggleLogin }) => {
+export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onToggleLogin }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
   const [isMobileContentsOpen, setIsMobileContentsOpen] = useState(false);
   const [mobileStateListOpen, setMobileStateListOpen] = useState(false);
 
-  const handleNavSection = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
-    e.preventDefault();
-    setIsMobileMenuOpen(false);
-    if (onNavigate) {
-      onNavigate('home');
-      setTimeout(() => {
-        const element = document.getElementById(sectionId);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    }
-  };
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -86,11 +75,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, isLoggedIn, onToggle
     {
       title: "Serviços de contabilidade:",
       items: [
-        { label: "Abrir MEI Grátis" },
-        { label: "Deixar de ser MEI" },
-        { label: "Trocar de contador" },
-        { label: "Contabilidade completa" },
-        { label: "Assessoria Contábil" }
+        { label: "Abrir MEI Grátis", to: "/abrir-mei-gratis" },
+        { label: "Deixar de ser MEI", to: "/deixar-de-ser-mei" },
+        { label: "Trocar de contador", to: "/trocar-de-contador" },
+        { label: "Contabilidade completa", to: "/contabilidade-completa" },
+        { label: "Assessoria Contábil", to: "/assessoria-contabil" }
       ]
     },
     {
@@ -107,11 +96,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, isLoggedIn, onToggle
     {
       title: "Calculadoras:",
       items: [
-        { label: "Calculadora de Custo para abrir CNPJ" },
-        { label: "Calculadora PJ x CLT" },
-        { label: "Calculadora de Fator R" },
-        { label: "Calculadora de RPA online" },
-        { label: "Calculadora de Reforma Tributária" }
+        { label: "Calculadora de Custo para abrir CNPJ", to: "/calculadora-custo-abertura" },
+        { label: "Calculadora PJ x CLT", to: "/calculadora-pj-clt" },
+        { label: "Calculadora de Fator R", to: "/calculadora-fator-r" },
+        { label: "Calculadora de RPA online", to: "/calculadora-rpa" },
+        { label: "Calculadora de Reforma Tributária", to: "/calculadora-reforma-tributaria" }
       ]
     },
     {
@@ -142,15 +131,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, isLoggedIn, onToggle
     >
       <div className={`mx-auto ${isScrolled ? 'w-full' : 'max-w-7xl'}`}>
         <div className="flex justify-between items-center">
-          {/* Logo - changed font-bold to font-medium */}
-          <div className="flex-shrink-0 flex items-center gap-2 cursor-pointer" onClick={() => onNavigate?.('home')}>
+          {/* Logo */}
+          <Link to="/" className="flex-shrink-0 flex items-center gap-2 cursor-pointer">
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-medium text-xl transition-colors ${logoBgClass}`}>
               M
             </div>
             <span className={`font-medium text-xl tracking-tight ${logoTextClass}`}>
               MeiBiz
             </span>
-          </div>
+          </Link>
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center">
@@ -204,17 +193,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, isLoggedIn, onToggle
                                 >
                                   {item.label}
                                 </a>
-                              ) : (
-                                <button
-                                  onClick={() => {
-                                    if (item.label === "Abrir MEI Grátis") onNavigate?.('abrir-mei');
-                                    else if (item.label === "Deixar de ser MEI") onNavigate?.('deixar-mei');
-                                    else if (item.label === "Trocar de contador") onNavigate?.('trocar-contador');
-                                    else if (item.label === "Contabilidade completa") onNavigate?.('contabilidade-completa');
-                                    else if (item.label === "Assessoria Contábil") onNavigate?.('assessoria');
-                                  }}
+                              ) : item.to ? (
+                                <Link
+                                  to={item.to}
                                   className="text-slate-500 hover:text-brand-600 text-sm transition-colors block text-left"
                                 >
+                                  {item.label}
+                                </Link>
+                              ) : (
+                                <button className="text-slate-500 hover:text-brand-600 text-sm transition-colors block text-left">
                                   {item.label}
                                 </button>
                               )}
@@ -229,13 +216,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, isLoggedIn, onToggle
 
               {/* Link Simples - Planos */}
               <li>
-                <a
-                  href="#planos"
-                  onClick={(e) => handleNavSection(e, 'planos')}
+                <Link
+                  to="/#planos"
                   className={`font-medium transition-colors text-sm ${textColorClass}`}
                 >
                   Planos
-                </a>
+                </Link>
               </li>
 
               {/* Dropdown Menu - Conteúdos */}
@@ -258,24 +244,20 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, isLoggedIn, onToggle
                         <ul className="space-y-3">
                           {col.items.map((item, i) => (
                             <li key={i}>
-                              <button
-                                onClick={() => {
-                                  if (item.label.includes('Calculadora de Custo para abrir CNPJ')) {
-                                    onNavigate?.('cost-calculator');
-                                  } else if (item.label.includes('Calculadora PJ x CLT')) {
-                                    onNavigate?.('pj-clt');
-                                  } else if (item.label.includes('Calculadora de Fator R')) {
-                                    onNavigate?.('factor-r');
-                                  } else if (item.label.includes('Calculadora de RPA online')) {
-                                    onNavigate?.('rpa');
-                                  } else if (item.label.includes('Calculadora de Reforma Tributária')) {
-                                    onNavigate?.('tax-reform');
-                                  }
-                                }}
-                                className="text-slate-500 hover:text-brand-600 text-sm transition-colors block text-left w-full"
-                              >
-                                {item.label}
-                              </button>
+                              {item.to ? (
+                                <Link
+                                  to={item.to}
+                                  className="text-slate-500 hover:text-brand-600 text-sm transition-colors block text-left w-full"
+                                >
+                                  {item.label}
+                                </Link>
+                              ) : (
+                                <button
+                                  className="text-slate-500 hover:text-brand-600 text-sm transition-colors block text-left w-full"
+                                >
+                                  {item.label}
+                                </button>
+                              )}
                             </li>
                           ))}
                         </ul>
@@ -287,22 +269,20 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, isLoggedIn, onToggle
 
               {/* Other Links */}
               <li>
-                <a
-                  href="#como-funciona"
-                  onClick={(e) => handleNavSection(e, 'como-funciona')}
+                <Link
+                  to="/#como-funciona"
                   className={`font-medium transition-colors text-sm ${textColorClass}`}
                 >
                   Como funciona
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#faq"
-                  onClick={(e) => handleNavSection(e, 'faq')}
+                <Link
+                  to="/#faq"
                   className={`font-medium transition-colors text-sm ${textColorClass}`}
                 >
                   Dúvidas?
-                </a>
+                </Link>
               </li>
 
             </ul>
@@ -388,16 +368,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, isLoggedIn, onToggle
                             >
                               {item.label}
                             </a>
+                          ) : item.to ? (
+                            <Link
+                              to={item.to}
+                              onClick={() => setIsMobileMenuOpen(false)}
+                              className="text-slate-600 hover:text-brand-600 text-sm block text-left w-full"
+                            >
+                              {item.label}
+                            </Link>
                           ) : (
                             <button
-                              onClick={() => {
-                                setIsMobileMenuOpen(false);
-                                if (item.label === "Abrir MEI Grátis") onNavigate?.('abrir-mei');
-                                else if (item.label === "Deixar de ser MEI") onNavigate?.('deixar-mei');
-                                else if (item.label === "Trocar de contador") onNavigate?.('trocar-contador');
-                                else if (item.label === "Contabilidade completa") onNavigate?.('contabilidade-completa');
-                                else if (item.label === "Assessoria Contábil") onNavigate?.('assessoria');
-                              }}
                               className="text-slate-600 hover:text-brand-600 text-sm block text-left w-full"
                             >
                               {item.label}
@@ -412,13 +392,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, isLoggedIn, onToggle
             </div>
 
             {/* Mobile Planos Link */}
-            <a
-              href="#planos"
+            <Link
+              to="/#planos"
               className="block text-lg font-medium py-3 border-b border-slate-100 text-slate-600 hover:text-brand-600"
-              onClick={(e) => handleNavSection(e, 'planos')}
+              onClick={() => setIsMobileMenuOpen(false)}
             >
               Planos
-            </a>
+            </Link>
 
             {/* Mobile Conteúdos Accordion */}
             <div className="border-b border-slate-100 pb-2">
@@ -437,29 +417,21 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, isLoggedIn, onToggle
                     <ul className="space-y-3 pl-2 border-l-2 border-slate-200">
                       {col.items.map((item, i) => (
                         <li key={i}>
-                          <button
-                            onClick={() => {
-                              if (item.label.includes('Calculadora de Custo para abrir CNPJ')) {
-                                onNavigate?.('cost-calculator');
-                                setIsMobileMenuOpen(false);
-                              } else if (item.label.includes('Calculadora PJ x CLT')) {
-                                onNavigate?.('pj-clt');
-                                setIsMobileMenuOpen(false);
-                              } else if (item.label.includes('Calculadora de Fator R')) {
-                                onNavigate?.('factor-r');
-                                setIsMobileMenuOpen(false);
-                              } else if (item.label.includes('Calculadora de RPA online')) {
-                                onNavigate?.('rpa');
-                                setIsMobileMenuOpen(false);
-                              } else if (item.label.includes('Calculadora de Reforma Tributária')) {
-                                onNavigate?.('tax-reform');
-                                setIsMobileMenuOpen(false);
-                              }
-                            }}
-                            className="text-slate-600 hover:text-brand-600 text-sm block text-left w-full"
-                          >
-                            {item.label}
-                          </button>
+                          {item.to ? (
+                            <Link
+                              to={item.to}
+                              onClick={() => setIsMobileMenuOpen(false)}
+                              className="text-slate-600 hover:text-brand-600 text-sm block text-left w-full"
+                            >
+                              {item.label}
+                            </Link>
+                          ) : (
+                            <button
+                              className="text-slate-600 hover:text-brand-600 text-sm block text-left w-full"
+                            >
+                              {item.label}
+                            </button>
+                          )}
                         </li>
                       ))}
                     </ul>
@@ -469,20 +441,20 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, isLoggedIn, onToggle
             </div>
 
             {/* Other Mobile Links */}
-            <a
-              href="#como-funciona"
+            <Link
+              to="/#como-funciona"
               className="block text-lg font-medium py-3 border-b border-slate-100 text-slate-600 hover:text-brand-600"
-              onClick={(e) => handleNavSection(e, 'como-funciona')}
+              onClick={() => setIsMobileMenuOpen(false)}
             >
               Como funciona
-            </a>
-            <a
-              href="#faq"
+            </Link>
+            <Link
+              to="/#faq"
               className="block text-lg font-medium py-3 border-b border-slate-100 text-slate-600 hover:text-brand-600"
-              onClick={(e) => handleNavSection(e, 'faq')}
+              onClick={() => setIsMobileMenuOpen(false)}
             >
               Dúvidas?
-            </a>
+            </Link>
 
             <div className="pt-6 flex flex-col gap-3">
               <Button variant="outline" fullWidth onClick={() => { setIsMobileMenuOpen(false); onToggleLogin?.(); }}>

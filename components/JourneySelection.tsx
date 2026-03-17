@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowRight, Store, RefreshCw } from 'lucide-react';
 
 export const JourneySelection: React.FC = () => {
@@ -14,7 +15,7 @@ export const JourneySelection: React.FC = () => {
         
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {/* Card 1 */}
-          <a href="#" className="group relative bg-white/5 backdrop-blur-sm rounded-3xl p-10 border border-white/10 hover:border-brand-400 hover:bg-white/10 transition-all duration-300 hover:-translate-y-2">
+          <Link to="/abrir-mei-gratis" className="group relative bg-white/5 backdrop-blur-sm rounded-3xl p-10 border border-white/10 hover:border-brand-400 hover:bg-white/10 transition-all duration-300 hover:-translate-y-2">
             <div className="w-16 h-16 bg-brand-500 rounded-2xl flex items-center justify-center mb-6 text-white shadow-lg shadow-brand-500/30">
               <Store size={32} />
             </div>
@@ -25,10 +26,10 @@ export const JourneySelection: React.FC = () => {
             <div className="flex items-center text-white font-medium group-hover:gap-3 transition-all">
                 Começar agora <ArrowRight className="ml-2 w-5 h-5" />
             </div>
-          </a>
+          </Link>
 
           {/* Card 2 */}
-          <a href="#" className="group relative bg-white/5 backdrop-blur-sm rounded-3xl p-10 border border-white/10 hover:border-blue-400 hover:bg-white/10 transition-all duration-300 hover:-translate-y-2">
+          <Link to="/trocar-de-contador" className="group relative bg-white/5 backdrop-blur-sm rounded-3xl p-10 border border-white/10 hover:border-blue-400 hover:bg-white/10 transition-all duration-300 hover:-translate-y-2">
             <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center mb-6 text-white shadow-lg shadow-blue-500/30">
               <RefreshCw size={32} />
             </div>
@@ -39,7 +40,7 @@ export const JourneySelection: React.FC = () => {
             <div className="flex items-center text-white font-medium group-hover:gap-3 transition-all">
                 Fazer migração <ArrowRight className="ml-2 w-5 h-5" />
             </div>
-          </a>
+          </Link>
         </div>
       </div>
     </section>

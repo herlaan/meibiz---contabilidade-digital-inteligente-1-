@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { MeiOpportunity } from './components/MeiOpportunity';
@@ -8,7 +9,7 @@ import { JourneySelection } from './components/JourneySelection';
 import { HowItWorks } from './components/HowItWorks';
 import { Plans } from './components/Plans';
 import { SavingsSimulator } from './components/SavingsSimulator';
-import { SuccessStories } from './components/SuccessStories'; // Added
+import { SuccessStories } from './components/SuccessStories';
 import { ComparativeTable } from './components/ComparativeTable';
 import { AdditionalSolutions } from './components/AdditionalSolutions';
 import { FAQ } from './components/FAQ';
@@ -28,15 +29,28 @@ import { ChangeAccountantPage } from './components/ChangeAccountantPage';
 import { CompleteAccountingPage } from './components/CompleteAccountingPage';
 import { AccountingAdvisoryPage } from './components/AccountingAdvisoryPage';
 import { AiChatWidget } from './components/AiChatWidget';
-import { Settings, RefreshCw, FileText, CheckCircle2 } from 'lucide-react';
 
-const App: React.FC = () => {
-  type ViewState = 'home' | 'cost-calculator' | 'pj-clt' | 'factor-r' | 'rpa' | 'tax-reform' | 'abrir-mei' | 'deixar-mei' | 'trocar-contador' | 'contabilidade-completa' | 'assessoria';
-  const [currentView, setCurrentView] = React.useState<ViewState>('home');
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+// ScrollToTop component to handle window scroll and hash navigation
+const ScrollToTop: React.FC = () => {
+  const { pathname, hash } = useLocation();
 
-  const toggleLogin = () => setIsLoggedIn(!isLoggedIn);
+  useEffect(() => {
+    if (hash) {
+      const element = document.getElementById(hash.replace('#', ''));
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, hash]);
 
+  return null;
+};
+
+const HomePage: React.FC = () => {
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -53,88 +67,66 @@ const App: React.FC = () => {
     elements.forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
-  }, [currentView]); // Re-observe when view changes
+  }, []);
 
-  const navigateTo = (view: ViewState) => {
-    const protectedViews = ['deixar-mei', 'trocar-contador', 'contabilidade-completa', 'assessoria'];
+  return (
+    <div className="snap-y snap-proximity lg:snap-mandatory">
+      <div className="snap-start"><Hero /></div>
+      <TechDivider />
+      <div className="snap-start"><MeiOpportunity /></div>
+      <TechDivider />
+      <OfficeFeatures />
+      <Segments />
+      <div className="snap-start"><SavingsSimulator /></div>
+      <HowItWorks />
+      <div className="snap-start" id="planos"><Plans /></div>
+      <ComparativeTable />
+      <SuccessStories />
+      <JourneySelection />
+      <AdditionalSolutions />
+      <div id="faq"><FAQ /></div>
+      <SocialProof />
+      <Institutional />
+      <CallToAction />
+    </div>
+  );
+};
 
-    // Redirect to plans if trying to access protected route while logged out
-    if (protectedViews.includes(view) && !isLoggedIn) {
-      setCurrentView('home');
-      setTimeout(() => {
-        const planosEl = document.getElementById('planos');
-        if (planosEl) planosEl.scrollIntoView({ behavior: 'smooth' });
-      }, 50);
-      return;
-    }
+const App: React.FC = () => {
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const toggleLogin = () => setIsLoggedIn(!isLoggedIn);
 
-    setCurrentView(view);
-    window.scrollTo(0, 0);
-  };
-
-  if (currentView !== 'home') {
-    return (
-      <div className="min-h-screen flex flex-col w-full overflow-x-hidden font-sans text-slate-900 bg-slate-950">
-        <Navbar onNavigate={navigateTo} isLoggedIn={isLoggedIn} onToggleLogin={toggleLogin} />
+  return (
+    <Router>
+      <ScrollToTop />
+      <div className="min-h-screen flex flex-col w-full overflow-x-hidden font-sans text-slate-900 bg-offwhite">
+        <Navbar isLoggedIn={isLoggedIn} onToggleLogin={toggleLogin} />
         <main className="flex-grow">
-          {currentView === 'cost-calculator' && <CostCalculator onBack={() => navigateTo('home')} />}
-          {currentView === 'pj-clt' && <PjCltCalculator onBack={() => navigateTo('home')} />}
-          {currentView === 'factor-r' && <FactorRCalculator onBack={() => navigateTo('home')} />}
-          {currentView === 'rpa' && <RpaCalculator onBack={() => navigateTo('home')} />}
-          {currentView === 'tax-reform' && <TaxReformCalculator onBack={() => navigateTo('home')} />}
-          {currentView === 'abrir-mei' && <OpenMeiFree onBack={() => navigateTo('home')} />}
-          {currentView === 'deixar-mei' && <LeaveMeiPage onBack={() => navigateTo('home')} />}
-          {currentView === 'trocar-contador' && <ChangeAccountantPage onBack={() => navigateTo('home')} />}
-          {currentView === 'contabilidade-completa' && <CompleteAccountingPage onBack={() => navigateTo('home')} />}
-          {currentView === 'assessoria' && <AccountingAdvisoryPage onBack={() => navigateTo('home')} />}
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/calculadora-custo-abertura" element={<CostCalculator />} />
+            <Route path="/calculadora-pj-clt" element={<NavigationWrapper element={PjCltCalculator} />} />
+            <Route path="/calculadora-fator-r" element={<NavigationWrapper element={FactorRCalculator} />} />
+            <Route path="/calculadora-rpa" element={<NavigationWrapper element={RpaCalculator} />} />
+            <Route path="/calculadora-reforma-tributaria" element={<NavigationWrapper element={TaxReformCalculator} />} />
+            <Route path="/abrir-mei-gratis" element={<NavigationWrapper element={OpenMeiFree} />} />
+            <Route path="/deixar-de-ser-mei" element={<NavigationWrapper element={LeaveMeiPage} />} />
+            <Route path="/trocar-de-contador" element={<NavigationWrapper element={ChangeAccountantPage} />} />
+            <Route path="/contabilidade-completa" element={<NavigationWrapper element={CompleteAccountingPage} />} />
+            <Route path="/assessoria-contabil" element={<NavigationWrapper element={AccountingAdvisoryPage} />} />
+          </Routes>
         </main>
         <AiChatWidget isLoggedIn={isLoggedIn} />
         <Footer />
       </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen flex flex-col w-full overflow-x-hidden font-sans text-slate-900 bg-offwhite snap-y snap-proximity lg:snap-mandatory">
-      <Navbar onNavigate={navigateTo} isLoggedIn={isLoggedIn} onToggleLogin={toggleLogin} />
-      <main className="flex-grow">
-        <div className="snap-start"><Hero /></div>
-        <TechDivider />
-
-        {/* Humanization Step 1: Specialist Image in MeiOpportunity */}
-        <div className="snap-start"><MeiOpportunity /></div>
-
-        {/* Tech Transition */}
-        <TechDivider />
-        <OfficeFeatures />
-        <Segments />
-
-        <div className="snap-start"><SavingsSimulator /></div>
-
-        <HowItWorks />
-        <div className="snap-start"><Plans /></div>
-        <ComparativeTable />
-
-        {/* Humanization Step 3: Success Story Case Study */}
-        <SuccessStories />
-
-        <JourneySelection />
-        <AdditionalSolutions />
-
-        <FAQ />
-
-        {/* Humanization Step 4: Real Client Photos */}
-        <SocialProof />
-
-        {/* Humanization Step 5: Behind the Scenes */}
-        <Institutional />
-
-        <CallToAction />
-      </main>
-      <AiChatWidget isLoggedIn={isLoggedIn} />
-      <Footer />
-    </div>
+    </Router>
   );
+};
+
+// Helper to wrap components that expect onBack
+const NavigationWrapper: React.FC<{ element: React.FC<any> }> = ({ element: Element }) => {
+  const navigate = useNavigate();
+  return <Element onBack={() => navigate('/')} />;
 };
 
 export default App;

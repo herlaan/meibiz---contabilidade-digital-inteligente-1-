@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Calculator, MapPin, Building, CreditCard, CheckCircle2, ArrowLeft, Info, HelpCircle } from 'lucide-react';
 import { Button } from './Button';
 
@@ -17,38 +18,33 @@ const stateFees: StateFee[] = [
     { uf: 'SC', name: 'Santa Catarina', juntaFee: 280 },
     { uf: 'BA', name: 'Bahia', juntaFee: 310 },
     { uf: 'DF', name: 'Distrito Federal', juntaFee: 365 },
-    // Add more as needed, using averages for others
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 const otherUFs = [
     'AC', 'AL', 'AP', 'AM', 'CE', 'ES', 'GO', 'MA', 'MT', 'MS', 'PA', 'PB', 'PI', 'RN', 'RO', 'RR', 'SE', 'TO'
-].map(uf => ({ uf, name: uf, juntaFee: 350 })); // Default average for missing UFs
+].map(uf => ({ uf, name: uf, juntaFee: 350 }));
 
 const allStates = [...stateFees, ...otherUFs].sort((a, b) => a.name.localeCompare(b.name));
 
-interface CostCalculatorProps {
-    onBack: () => void;
-}
-
-export const CostCalculator: React.FC<CostCalculatorProps> = ({ onBack }) => {
+export const CostCalculator: React.FC = () => {
+    const navigate = useNavigate();
     const [selectedUF, setSelectedUF] = useState<string>('SP');
     const [companyType, setCompanyType] = useState<'ME' | 'EPP'>('ME');
     const [hasDigitalCert, setHasDigitalCert] = useState<boolean>(false);
 
     const currentJuntaFee = allStates.find(s => s.uf === selectedUF)?.juntaFee || 350;
     const digitalCertCost = hasDigitalCert ? 0 : 220;
-    const municipalFee = 180; // Estimated average
+    const municipalFee = 180;
     const totalCost = currentJuntaFee + digitalCertCost + municipalFee;
 
     return (
         <div className="min-h-screen bg-slate-950 pt-32 pb-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-            {/* Background Effects */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-600/10 rounded-full blur-[120px] -z-0 opacity-50"></div>
             <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent-400/10 rounded-full blur-[100px] -z-0 opacity-30"></div>
 
             <div className="max-w-5xl mx-auto relative z-10">
                 <button
-                    onClick={onBack}
+                    onClick={() => navigate('/')}
                     className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-12 group"
                 >
                     <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-all">
