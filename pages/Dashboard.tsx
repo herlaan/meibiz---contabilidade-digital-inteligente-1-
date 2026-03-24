@@ -339,7 +339,7 @@ export const Dashboard: React.FC = () => {
             </button>
 
             <button
-              onClick={() => !isFreePlan ? handleWhatsAppRedirect('fatura') : handleWhatsAppRedirect('upgrade')}
+              onClick={() => !isFreePlan ? handleWhatsAppRedirect('fatura') : handleUpgradeIntent()}
               className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all text-left group ${isFreePlan
                   ? 'bg-slate-50 border-slate-100 cursor-pointer hover:bg-slate-100'
                   : 'bg-white border-transparent hover:border-slate-100 hover:bg-slate-50'
