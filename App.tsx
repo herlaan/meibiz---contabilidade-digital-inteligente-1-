@@ -35,6 +35,8 @@ import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Dashboard } from './pages/Dashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
+import { ForgotPassword } from './pages/ForgotPassword';
+import { ResetPassword } from './pages/ResetPassword';
 
 // ScrollToTop component to handle window scroll and hash navigation
 const ScrollToTop: React.FC = () => {
@@ -157,6 +159,8 @@ const AppRoutes: React.FC = () => {
         {/* Páginas de Autenticação */}
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Register />} />
+        <Route path="/recuperar-senha" element={<ForgotPassword />} />
+        <Route path="/redefinir-senha" element={<ResetPassword />} />
         
         {/* Serviços Públicos */}
         <Route path="/deixar-de-ser-mei" element={<NavigationWrapper element={LeaveMeiPage} />} />
