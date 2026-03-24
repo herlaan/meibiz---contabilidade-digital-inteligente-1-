@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { Button } from '../components/Button';
-import { Building2, FileText, MessageSquare, AlertCircle, TrendingUp, Phone, MapPin, Briefcase, DollarSign, X, Check } from 'lucide-react';
+import { Building2, FileText, MessageSquare, AlertCircle, TrendingUp, Phone, MapPin, Briefcase, DollarSign, X, Check, DownloadCloud, Loader2 } from 'lucide-react';
 
 // NÚMERO DE ATENDIMENTO DA CONTABILIDADE (Ex: 5511999999999)
 const WHATSAPP_NUMBER = '5575988927727'; 
@@ -26,6 +26,10 @@ export const Dashboard: React.FC = () => {
   // Controle do Modal de Planos
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
 
+  // Estados dos Documentos
+  const [documents, setDocuments] = useState<any[]>([]);
+  const [loadingDocs, setLoadingDocs] = useState(false);
+
   useEffect(() => {
     if (profile) {
       setDocumentNumber(profile.document_number || '');
@@ -38,6 +42,32 @@ export const Dashboard: React.FC = () => {
       setBusinessSegment(profile.business_segment || '');
     }
   }, [profile]);
+
+  useEffect(() => {
+    if (user) {
+      fetchDocuments();
+    }
+  }, [user]);
+
+  const fetchDocuments = async () => {
+    if (!user) return;
+    setLoadingDocs(true);
+    const { data, error } = await supabase.storage.from('documentos').list(user.id);
+    if (!error && data) {
+      setDocuments(data);
+    }
+    setLoadingDocs(false);
+  };
+
+  const downloadDocument = async (fileName: string) => {
+    if (!user) return;
+    const { data, error } = await supabase.storage.from('documentos').createSignedUrl(`${user.id}/${fileName}`, 60);
+    if (error) {
+      alert('Erro ao baixar o documento. Ele pode ter expirado ou sido removido.');
+    } else if (data) {
+      window.open(data.signedUrl, '_blank');
+    }
+  };
 
   const handleSaveCompanyData = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -326,6 +356,51 @@ export const Dashboard: React.FC = () => {
               {isFreePlan && <AlertCircle size={16} className="text-amber-500" title="Requer plano premium" />}
             </button>
 
+          </div>
+        </div>
+
+        {/* Cofre de Documentos */}
+        <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
+          <div className="flex items-center gap-2 mb-4">
+            <h3 className="font-bold text-slate-900">Meus Documentos</h3>
+            <span className="bg-slate-100 text-slate-500 text-xs px-2 py-0.5 rounded-full font-medium">Pasta Segura</span>
+          </div>
+
+          <div className="space-y-3 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+            {loadingDocs ? (
+              <div className="flex items-center justify-center p-4 text-slate-400">
+                <Loader2 size={24} className="animate-spin" />
+              </div>
+            ) : documents.length === 0 ? (
+              <p className="text-sm text-slate-500 p-4 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                Os seus relatórios, Das e NFs aparecerão aqui quando a contabilidade os enviar.
+              </p>
+            ) : (
+              documents.map((doc, index) => (
+                <div key={index} className="flex flex-col gap-2 p-3 bg-slate-50 rounded-xl border border-slate-100 hover:border-brand-200 transition-colors">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-3 overflow-hidden">
+                      <div className="p-2 bg-brand-50 text-brand-600 rounded-lg shrink-0">
+                        <FileText size={16} />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-slate-700 truncate">{doc.name}</p>
+                        <p className="text-xs text-slate-400 mt-0.5">
+                          Enviado em {new Date(doc.created_at).toLocaleDateString('pt-BR')}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => downloadDocument(doc.name)}
+                    className="flex items-center justify-center gap-2 w-full text-xs font-semibold bg-white border border-slate-200 text-slate-600 px-3 py-2 rounded-lg hover:border-brand-500 hover:text-brand-600 transition-colors"
+                  >
+                    <DownloadCloud size={14} />
+                    Baixar Arquivo
+                  </button>
+                </div>
+              ))
+            )}
           </div>
         </div>
 

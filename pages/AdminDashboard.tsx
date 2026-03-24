@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Profile } from '../contexts/AuthContext';
-import { Search } from 'lucide-react';
+import { Search, UploadCloud, Loader2 } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [uploadingId, setUploadingId] = useState<string | null>(null);
 
   useEffect(() => { fetchProfiles(); }, []);
 
@@ -22,6 +23,31 @@ export const AdminDashboard: React.FC = () => {
     if (!error) {
       setProfiles(profiles.map(p => p.id === id ? { ...p, plan_type: newPlan } : p));
     }
+  };
+
+  // NOVA FUNÇÃO: Upload de Documentos
+  const handleFileUpload = async (userId: string, event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploadingId(userId);
+
+    // Salva na pasta do usuário: {id-do-usuario}/nome-do-arquivo.pdf
+    const filePath = `${userId}/${file.name}`;
+
+    const { error } = await supabase.storage
+      .from('documentos')
+      .upload(filePath, file, { cacheControl: '3600', upsert: true });
+
+    if (error) {
+      alert(`Erro ao fazer upload: ${error.message}`);
+    } else {
+      alert('Documento enviado com sucesso para o cliente!');
+    }
+
+    setUploadingId(null);
+    // Limpar o input
+    event.target.value = '';
   };
 
   const filteredProfiles = profiles.filter(p => 
@@ -53,6 +79,7 @@ export const AdminDashboard: React.FC = () => {
             <tr className="bg-slate-50 border-b border-slate-100">
               <th className="px-6 py-4 text-sm font-bold text-slate-700">Cliente / Empresa</th>
               <th className="px-6 py-4 text-sm font-bold text-slate-700">Controlo de Plano</th>
+              <th className="px-6 py-4 text-sm font-bold text-slate-700">Ações (Documentos)</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-50">
@@ -76,6 +103,29 @@ export const AdminDashboard: React.FC = () => {
                     <option value="essencial">MEI ESSENCIAL</option>
                     <option value="premium">MEI PREMIUM</option>
                   </select>
+                </td>
+                <td className="px-6 py-4">
+                  <div className="relative inline-block">
+                    <input
+                      type="file"
+                      id={`file-${p.id}`}
+                      className="hidden"
+                      onChange={(e) => handleFileUpload(p.id, e)}
+                      disabled={uploadingId === p.id}
+                      accept=".pdf,.png,.jpg,.jpeg"
+                    />
+                    <label
+                      htmlFor={`file-${p.id}`}
+                      className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
+                        uploadingId === p.id
+                          ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                          : 'bg-brand-50 text-brand-700 hover:bg-brand-100'
+                      }`}
+                    >
+                      {uploadingId === p.id ? <Loader2 size={16} className="animate-spin" /> : <UploadCloud size={16} />}
+                      Enviar Arquivo
+                    </label>
+                  </div>
                 </td>
               </tr>
             ))}
