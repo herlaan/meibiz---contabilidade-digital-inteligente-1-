@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { Button } from '../components/Button';
-import { Building2, FileText, MessageSquare, AlertCircle, TrendingUp, Phone, MapPin, Briefcase, DollarSign } from 'lucide-react';
+import { Building2, FileText, MessageSquare, AlertCircle, TrendingUp, Phone, MapPin, Briefcase, DollarSign, X, Check } from 'lucide-react';
 
 // NÚMERO DE ATENDIMENTO DA CONTABILIDADE (Ex: 5511999999999)
 const WHATSAPP_NUMBER = '5575988927727'; 
@@ -22,6 +22,9 @@ export const Dashboard: React.FC = () => {
 
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+  
+  // Controle do Modal de Planos
+  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
 
   useEffect(() => {
     if (profile) {
@@ -88,27 +91,23 @@ export const Dashboard: React.FC = () => {
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedText}`, '_blank');
   };
 
+  // Abre o modal de escolha
   const handleUpgradeIntent = () => {
+    setIsUpgradeModalOpen(true);
+  };
+
+  // Dinamicamente processa o link específico escolhido no Modal
+  const handleDynamicUpgrade = (stripeLink: string) => {
     if (!user) return;
-
-    // Registamos a intenção de compra no console (analytics futuro)
-    console.info(`Redirecionando para Checkout: ${profile?.email}`);
-
-    // Injetamos o ID do Supabase e o E-mail na URL do Stripe
-    // Isso é CRÍTICO para a automação do Webhook funcionar depois
     try {
-      const checkoutUrl = new URL(STRIPE_PAYMENT_LINK);
+      const checkoutUrl = new URL(stripeLink);
       checkoutUrl.searchParams.append('client_reference_id', user.id);
-      
       if (profile?.email) {
         checkoutUrl.searchParams.append('prefilled_email', profile.email);
       }
-
-      // Redireciona o utilizador para a página de pagamento segura
       window.location.href = checkoutUrl.toString();
     } catch (e) {
       console.error("Erro ao gerar URL do Stripe:", e);
-      // Fallback para o WhatsApp se o link for inválido
       handleWhatsAppRedirect('upgrade');
     }
   };
@@ -331,6 +330,102 @@ export const Dashboard: React.FC = () => {
         </div>
 
       </div>
+
+      {/* MODAL DE UPGRADE */}
+      {isUpgradeModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm z-[100]">
+          <div className="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl relative">
+            
+            <button 
+              onClick={() => setIsUpgradeModalOpen(false)}
+              aria-label="Fechar Modal"
+              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors z-10"
+            >
+              <X size={20} />
+            </button>
+
+            <div className="p-8 md:p-12">
+              <div className="text-center max-w-2xl mx-auto mb-12">
+                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Evolua a sua contabilidade</h2>
+                <p className="text-lg text-slate-500">Escolha o plano ideal para o tamanho e momento da sua empresa.</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                {/* PLANO MEI START */}
+                <div className="border border-slate-200 rounded-3xl p-6 flex flex-col hover:border-brand-500 transition-colors">
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">MEI START</h3>
+                  <p className="text-sm text-slate-500 mb-6 flex-grow">Ideal para MEIs iniciantes ou com baixo movimento.</p>
+                  <div className="text-3xl font-bold text-slate-900 mb-6">
+                    R$ 89<span className="text-lg font-medium text-slate-500">/mês</span>
+                  </div>
+                  <ul className="space-y-3 mb-8 text-sm text-slate-600">
+                    <li className="flex gap-2"><Check size={18} className="text-brand-500 shrink-0" /> Abertura gratuita (plano anual)</li>
+                    <li className="flex gap-2"><Check size={18} className="text-brand-500 shrink-0" /> Declaração Anual incluída</li>
+                    <li className="flex gap-2"><Check size={18} className="text-brand-500 shrink-0" /> Suporte básico via WhatsApp</li>
+                    <li className="flex gap-2"><Check size={18} className="text-brand-500 shrink-0" /> Organização de documentos em nuvem</li>
+                    <li className="flex gap-2"><Check size={18} className="text-brand-500 shrink-0" /> Lembretes mensais automáticos</li>
+                  </ul>
+                  <Button 
+                    variant="outline" fullWidth
+                    onClick={() => handleDynamicUpgrade('https://buy.stripe.com/test_link_start_aqui')}
+                  >
+                    Assinar MEI START
+                  </Button>
+                </div>
+
+                {/* PLANO MEI ESSENCIAL (Recomendado) */}
+                <div className="border-2 border-brand-500 rounded-3xl p-6 flex flex-col relative shadow-xl shadow-brand-500/10">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                    MAIS ESCOLHIDO
+                  </span>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">MEI ESSENCIAL</h3>
+                  <p className="text-sm text-slate-500 mb-6 flex-grow">Perfeito para MEIs que já emitem notas frequentemente.</p>
+                  <div className="text-3xl font-bold text-slate-900 mb-6">
+                    R$ 129<span className="text-lg font-medium text-slate-500">/mês</span>
+                  </div>
+                  <ul className="space-y-3 mb-8 text-sm text-slate-600 font-medium">
+                    <li className="flex gap-2"><Check size={18} className="text-brand-500 shrink-0" /> Tudo do MEI START</li>
+                    <li className="flex gap-2"><Check size={18} className="text-brand-500 shrink-0" /> Emissão de até 20 notas fiscais/mês</li>
+                    <li className="flex gap-2"><Check size={18} className="text-brand-500 shrink-0" /> Controle fiscal básico e conferência</li>
+                    <li className="flex gap-2"><Check size={18} className="text-brand-500 shrink-0" /> Relatório trimestral</li>
+                    <li className="flex gap-2"><Check size={18} className="text-brand-500 shrink-0" /> Suporte prioritário</li>
+                  </ul>
+                  <Button 
+                    variant="primary" fullWidth
+                    onClick={() => handleDynamicUpgrade('https://buy.stripe.com/test_link_essencial_aqui')}
+                  >
+                    Assinar MEI ESSENCIAL
+                  </Button>
+                </div>
+
+                {/* PLANO MEI PREMIUM */}
+                <div className="border border-slate-200 rounded-3xl p-6 flex flex-col hover:border-slate-400 bg-slate-50 transition-colors">
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">MEI PREMIUM</h3>
+                  <p className="text-sm text-slate-500 mb-6 flex-grow">Melhor opção para quem deseja expandir com segurança.</p>
+                  <div className="text-3xl font-bold text-slate-900 mb-6">
+                    R$ 169<span className="text-lg font-medium text-slate-500">/mês</span>
+                  </div>
+                  <ul className="space-y-3 mb-8 text-sm text-slate-600">
+                    <li className="flex gap-2"><Check size={18} className="text-slate-700 shrink-0" /> Tudo do MEI ESSENCIAL</li>
+                    <li className="flex gap-2"><Check size={18} className="text-slate-700 shrink-0" /> Notas fiscais ilimitadas</li>
+                    <li className="flex gap-2"><Check size={18} className="text-slate-700 shrink-0" /> Consultoria mensal por vídeo/tel</li>
+                    <li className="flex gap-2"><Check size={18} className="text-slate-700 shrink-0" /> Planejamento tributário anual</li>
+                    <li className="flex gap-2"><Check size={18} className="text-slate-700 shrink-0" /> Análise de limite e migração MEI {'->'} ME</li>
+                  </ul>
+                  <Button 
+                    variant="outline" fullWidth className="bg-white"
+                    onClick={() => handleDynamicUpgrade('https://buy.stripe.com/test_link_premium_aqui')}
+                  >
+                    Assinar MEI PREMIUM
+                  </Button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
