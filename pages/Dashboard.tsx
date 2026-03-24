@@ -6,7 +6,7 @@ import { Building2, FileText, MessageSquare, AlertCircle, TrendingUp, Phone, Map
 
 // NÚMERO DE ATENDIMENTO DA CONTABILIDADE (Ex: 5511999999999)
 const WHATSAPP_NUMBER = '5575988927727'; 
-const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/test_seu_link_aqui';
+const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/test_00w9ASdtJ4xw31lgSRdAk00';
 
 export const Dashboard: React.FC = () => {
   const { user, profile, refreshProfile } = useAuth();
