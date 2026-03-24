@@ -26,10 +26,19 @@ serve(async (req) => {
     const session = event.data.object;
     const userId = session.client_reference_id;
     
-    // MAGIA: Lê a tag "plano" que você vai configurar nos links da Stripe!
-    // Exemplo: 'basico', 'profissional' ou 'premium'
-    const planType = session.metadata?.plano || 'premium';
-
+    // Tática alternativa inteligente: Identificar o plano pelo valor pago!
+    const amountPaid = session.amount_total;
+    let planType = 'premium'; // default
+    
+    if (amountPaid === 8900) {
+      planType = 'start';
+    } else if (amountPaid === 12900) {
+      planType = 'essencial';
+    } else if (amountPaid === 16900) {
+      planType = 'premium';
+    } else if (session.metadata?.plano) {
+      planType = session.metadata.plano; // Tenta o metadado como último recurso
+    }
     if (userId) {
       const supabaseAdmin = createClient(
         Deno.env.get('SUPABASE_URL') ?? '',
