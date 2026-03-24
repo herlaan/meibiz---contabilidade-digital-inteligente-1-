@@ -443,7 +443,7 @@ export const Dashboard: React.FC = () => {
                   </ul>
                   <Button 
                     variant="outline" fullWidth
-                    onClick={() => handleDynamicUpgrade('https://buy.stripe.com/test_link_start_aqui')}
+                    onClick={() => handleDynamicUpgrade('https://buy.stripe.com/test_7sYdR89dt0hg6dxeKJdAk01')}
                   >
                     Assinar MEI START
                   </Button>
@@ -468,7 +468,7 @@ export const Dashboard: React.FC = () => {
                   </ul>
                   <Button 
                     variant="primary" fullWidth
-                    onClick={() => handleDynamicUpgrade('https://buy.stripe.com/test_link_essencial_aqui')}
+                    onClick={() => handleDynamicUpgrade('https://buy.stripe.com/test_eVqeVcfBR7JI7hB321dAk02')}
                   >
                     Assinar MEI ESSENCIAL
                   </Button>
@@ -490,7 +490,7 @@ export const Dashboard: React.FC = () => {
                   </ul>
                   <Button 
                     variant="outline" fullWidth className="bg-white"
-                    onClick={() => handleDynamicUpgrade('https://buy.stripe.com/test_link_premium_aqui')}
+                    onClick={() => handleDynamicUpgrade('https://buy.stripe.com/test_7sYcN4blBe867hB321dAk03')}
                   >
                     Assinar MEI PREMIUM
                   </Button>
