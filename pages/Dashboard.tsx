@@ -88,11 +88,8 @@ export const Dashboard: React.FC = () => {
   };
 
   const handleUpgradeIntent = async () => {
-    // 1. Registamos no banco que o utilizador tem interesse no upgrade (Lead quente)
-    // Isso ajuda a sua equipa a saber quem clicar mas não finaliza a compra
-    console.log("Utilizador interessado em upgrade:", user?.email);
-    
-    // 2. Redirecionamos para o WhatsApp de vendas com contexto
+    // TODO: Futuramente, este log pode ser salvo em uma tabela 'analytics_events'
+    console.info(`Lead Interessado: ${profile?.email} - Plano atual: ${profile?.plan_type}`);
     handleWhatsAppRedirect('upgrade');
   };
 
