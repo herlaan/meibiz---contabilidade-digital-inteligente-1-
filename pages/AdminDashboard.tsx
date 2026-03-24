@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Profile } from '../contexts/AuthContext';
-import { Search, UploadCloud, Loader2, Users, FileText, Download, Trash2, Eye, Filter, Phone, Mail, Building2, ChevronDown, Activity, AlertCircle, X, MapPin, DollarSign, Briefcase } from 'lucide-react';
+import { Search, UploadCloud, Loader2, Users, FileText, Download, Trash2, Eye, Filter, Phone, Mail, Building2, ChevronDown, Activity, AlertCircle, X, MapPin, DollarSign, Briefcase, MessageCircle } from 'lucide-react';
 import { Button } from '../components/Button';
 
 export const AdminDashboard: React.FC = () => {
