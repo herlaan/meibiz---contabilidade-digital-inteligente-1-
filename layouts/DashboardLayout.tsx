@@ -30,12 +30,9 @@ export const DashboardLayout: React.FC = () => {
       <OnboardingModal />
       {/* Sidebar Desktop */}
       <aside className="hidden md:flex flex-col w-64 bg-slate-950 text-slate-300 border-r border-slate-800">
-        <div className="p-6 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-brand-600 text-white flex items-center justify-center font-bold text-xl">
-            M
-          </div>
-          <span className="font-bold text-xl text-white">MeiBiz</span>
-        </div>
+        <Link to="/" className="p-6 flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer block w-max">
+          <img src="/logos/logo-white.png" alt="MeiBiz" className="h-10 md:h-12 w-auto object-contain" />
+        </Link>
 
         <nav className="flex-1 px-4 space-y-2 mt-4">
           {menuItems.map((item) => {
@@ -77,7 +74,9 @@ export const DashboardLayout: React.FC = () => {
             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-slate-500">
               <Menu size={24} />
             </button>
-            <span className="font-bold text-lg text-slate-900">MeiBiz</span>
+            <Link to="/" className="cursor-pointer">
+              <img src="/logos/logo-blue.png" alt="MeiBiz" className="h-8 md:h-10 w-auto object-contain" />
+            </Link>
           </div>
           
           <div className="hidden md:block">

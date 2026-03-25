@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Instagram, Linkedin, Facebook, Twitter, ShieldCheck, Lock } from 'lucide-react';
 
 export const Footer: React.FC = () => {
@@ -8,10 +9,9 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
           
           <div className="col-span-2 lg:col-span-2 pr-8">
-            <div className="flex items-center gap-2 mb-6">
-              <div className="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center text-white font-medium">M</div>
-              <span className="text-slate-900 font-medium text-xl">MeiBiz</span>
-            </div>
+            <Link to="/" className="flex items-center gap-2 mb-6 block w-max cursor-pointer hover:opacity-80 transition-opacity">
+              <img src="/logos/logo-blue.png" alt="MeiBiz Logo" className="h-12 md:h-14 w-auto object-contain" />
+            </Link>
             <p className="text-sm text-slate-500 mb-6 leading-relaxed">
               A maior plataforma de contabilidade online do Brasil para micro e pequenas empresas. Simplificamos sua rotina para você focar no crescimento.
             </p>

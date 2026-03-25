@@ -134,12 +134,11 @@ export const Navbar: React.FC = () => {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link to="/" className="flex-shrink-0 flex items-center gap-2 cursor-pointer">
-            <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-medium text-xl transition-colors ${logoBgClass}`}>
-              M
-            </div>
-            <span className={`font-medium text-xl tracking-tight ${logoTextClass}`}>
-              MeiBiz
-            </span>
+            <img 
+              src={isScrolled ? "/logos/logo-blue.png" : "/logos/logo-white.png"} 
+              alt="MeiBiz" 
+              className="h-10 md:h-12 w-auto object-contain"
+            />
           </Link>
 
           {/* Desktop Nav */}

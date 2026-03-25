@@ -21,6 +21,7 @@ export const Plans: React.FC = () => {
         "Ideal para MEIs iniciantes ou com baixo movimento"
       ],
       highlight: false,
+      link: "https://buy.stripe.com/test_7sYdR89dt0hg6dxeKJdAk01"
     },
     {
       name: "MEI ESSENCIAL",
@@ -35,7 +36,8 @@ export const Plans: React.FC = () => {
         "Perfeito para MEIs que já emitem notas frequentemente"
       ],
       highlight: true,
-      tag: "Mais Escolhido"
+      tag: "Mais Escolhido",
+      link: "https://buy.stripe.com/test_eVqeVcfBR7JI7hB321dAk02"
     },
     {
       name: "MEI PREMIUM",
@@ -51,6 +53,7 @@ export const Plans: React.FC = () => {
         "Melhor opção para quem deseja expandir com segurança"
       ],
       highlight: false,
+      link: "https://buy.stripe.com/test_7sYcN4blBe867hB321dAk03"
     }
   ];
 
@@ -142,6 +145,7 @@ export const Plans: React.FC = () => {
                         fullWidth
                         size="sm"
                         className="mb-6"
+                        onClick={() => window.location.href = plan.link}
                       >
                         Contratar
                       </Button>
@@ -195,6 +199,7 @@ export const Plans: React.FC = () => {
                 variant={plan.highlight ? 'primary' : 'outline'} 
                 fullWidth
                 className="mb-8"
+                onClick={() => window.location.href = plan.link}
               >
                 Contratar
               </Button>

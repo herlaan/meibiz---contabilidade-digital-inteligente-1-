@@ -6,7 +6,7 @@ import { Button } from './Button';
 import { Building2, FileText, Phone, Briefcase } from 'lucide-react';
 
 export const OnboardingModal: React.FC = () => {
-  const { user, profile, refreshProfile } = useAuth();
+  const { user, profile, refreshProfile, isLoading } = useAuth();
   
   // Estados do formulário
   const [docType, setDocType] = useState('CNPJ');
@@ -19,8 +19,8 @@ export const OnboardingModal: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Regra de negócio: Se ele já tem o documento preenchido, não mostramos o modal
-  if (profile?.document_number) return null;
+  // Regra de negócio: Se ele já tem o documento preenchido ou os dados estão carregando, não mostramos o modal
+  if (isLoading || profile?.document_number) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
