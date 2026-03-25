@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Bot, User, Loader2, Sparkles, AlertCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
+import { useLocation } from 'react-router-dom';
 
 interface Message {
     id: string;
@@ -11,7 +12,8 @@ interface Message {
 }
 
 export const AiChatWidget: React.FC = () => {
-    const { isLoggedIn } = useAuth();
+    const { profile } = useAuth();
+    const location = useLocation();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
         {
@@ -55,7 +57,14 @@ export const AiChatWidget: React.FC = () => {
         // Chama a IA (Backend Supabase Edge Function)
         try {
             const { data, error } = await supabase.functions.invoke('chat-with-ai', {
-                body: { messages: [...messages, newUserMessage].map(m => ({ type: m.type, content: m.content })) }
+                body: { 
+                    messages: [...messages, newUserMessage].map(m => ({ type: m.type, content: m.content })),
+                    context: {
+                        pathname: location.pathname,
+                        isAdmin: profile?.is_admin || false,
+                        plan: profile?.plan_type || 'Visitante/Deslogado'
+                    }
+                }
             });
 
             if (error) throw error;

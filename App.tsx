@@ -108,7 +108,6 @@ const PublicLayout: React.FC = () => {
       <main className="flex-grow bg-offwhite">
         <Outlet />
       </main>
-      <AiChatWidget />
       <Footer />
     </div>
   );
@@ -143,8 +142,9 @@ const AdminRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
 
 const AppRoutes: React.FC = () => {
   return (
-    <Routes>
-      {/* MUNDO PÚBLICO: Usa a Navbar e o Footer tradicionais */}
+    <>
+      <Routes>
+        {/* MUNDO PÚBLICO: Usa a Navbar e o Footer tradicionais */}
       <Route element={<PublicLayout />}>
         <Route path="/" element={<HomePage />} />
         
@@ -180,6 +180,8 @@ const AppRoutes: React.FC = () => {
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    <AiChatWidget />
+    </>
   );
 };
 
