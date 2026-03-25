@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowRight, TrendingUp } from 'lucide-react';
 
 export const MeiOpportunity: React.FC = () => {
@@ -66,10 +67,10 @@ export const MeiOpportunity: React.FC = () => {
                   Cresceu e o limite de faturamento ficou pequeno? Migre para ME com segurança e continue expandindo seu negócio sem multas.
                 </p>
                 
-                <button className="group/btn bg-brand-950 text-white px-8 py-4 rounded-full font-medium inline-flex items-center hover:bg-brand-900 transition-all shadow-lg shadow-brand-900/20 hover:shadow-brand-900/40 hover:-translate-y-0.5">
+                <Link to="/deixar-de-ser-mei" className="group/btn bg-brand-950 text-white px-8 py-4 rounded-full font-medium inline-flex items-center hover:bg-brand-900 transition-all shadow-lg shadow-brand-900/20 hover:shadow-brand-900/40 hover:-translate-y-0.5">
                     Deixar de ser MEI 
                     <ArrowRight className="ml-2 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                </button>
+                </Link>
             </div>
 
             <div className="flex-1 flex justify-center w-full md:w-auto relative z-10">

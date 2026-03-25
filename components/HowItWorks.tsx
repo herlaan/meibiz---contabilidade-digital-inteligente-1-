@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from './Button';
 import { UserPlus, FileSearch, Landmark, Rocket, ArrowRight, ChevronRight, CheckCircle2 } from 'lucide-react';
 
@@ -108,11 +109,13 @@ export const HowItWorks: React.FC = () => {
         </div>
 
         <div className="text-center mt-8 lg:mt-16 reveal delay-300">
-            <Button size="lg" className="shadow-[0_20px_50px_-12px_rgba(59,130,246,0.5)] w-full sm:w-auto">
-                Quero abrir minha empresa <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
+            <Link to="/abrir-mei-gratis">
+              <Button size="lg" className="shadow-[0_20px_50px_-12px_rgba(59,130,246,0.5)] w-full sm:w-auto">
+                  Quero abrir minha empresa <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </Link>
             <p className="mt-6 text-sm text-slate-400">
-                Já tem CNPJ? <a href="#" className="text-brand-600 hover:underline font-medium">Veja como migrar</a>
+                Já tem CNPJ? <Link to="/trocar-de-contador" className="text-brand-600 hover:underline font-medium">Veja como migrar</Link>
             </p>
         </div>
       </div>

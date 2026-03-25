@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from './Button';
 
 type PlanType = 'start' | 'essencial' | 'premium';
@@ -50,9 +51,11 @@ export const SavingsSimulator: React.FC = () => {
             <p className="text-brand-100 text-lg mb-8 leading-relaxed">
               Não pague mais por serviços manuais. Na MeiBiz, a tecnologia trabalha para você pagar menos e ter mais controle. Invista a diferença no crescimento do seu negócio.
             </p>
-            <Button className="bg-accent-500 text-slate-900 hover:bg-accent-400 border-none font-medium">
-              Quero economizar agora
-            </Button>
+            <Link to="/#planos">
+              <Button className="bg-accent-500 text-slate-900 hover:bg-accent-400 border-none font-medium">
+                Quero economizar agora
+              </Button>
+            </Link>
           </div>
 
           <div className="reveal delay-200 bg-white/95 backdrop-blur-sm rounded-2xl p-8 shadow-2xl text-slate-900 border border-white/20">
