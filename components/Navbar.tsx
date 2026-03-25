@@ -117,27 +117,31 @@ export const Navbar: React.FC = () => {
     }
   ];
 
-  const textColorClass = isScrolled ? 'text-slate-700 hover:text-brand-600' : 'text-white/90 hover:text-white';
-  const logoTextClass = isScrolled ? 'text-slate-900' : 'text-white';
-  const mobileTextClass = isScrolled ? 'text-slate-900' : 'text-white';
-  const logoBgClass = isScrolled ? 'bg-brand-600 text-white' : 'bg-white text-brand-950';
+  const isActuallyScrolled = isScrolled || isMobileMenuOpen;
+  const textColorClass = isActuallyScrolled ? 'text-slate-700 hover:text-brand-600' : 'text-white/90 hover:text-white';
+  const logoTextClass = isActuallyScrolled ? 'text-slate-900' : 'text-white';
+  const mobileTextClass = isActuallyScrolled ? 'text-slate-900' : 'text-white';
+  const logoBgClass = isActuallyScrolled ? 'bg-brand-600 text-white' : 'bg-white text-brand-950';
 
   return (
     <header
       style={{ transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}
-      className={`fixed z-50 ${isScrolled
-        ? 'top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl bg-white/70 backdrop-blur-xl border border-white/40 shadow-2xl rounded-full py-3 px-6'
-        : 'top-0 left-0 w-full bg-transparent py-6 px-4 sm:px-6 lg:px-8 border-b border-transparent'
-        }`}
+      className={`fixed z-50 ${
+        isMobileMenuOpen
+          ? 'top-0 left-0 w-full bg-white py-4 px-4 sm:px-6 lg:px-8 border-b border-slate-100 shadow-sm'
+          : isScrolled
+            ? 'top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl bg-white/80 backdrop-blur-xl border border-white/40 shadow-2xl rounded-full py-3 px-6'
+            : 'top-0 left-0 w-full bg-transparent py-6 px-4 sm:px-6 lg:px-8 border-b border-transparent'
+      }`}
     >
       <div className={`mx-auto ${isScrolled ? 'w-full' : 'max-w-7xl'}`}>
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link to="/" className="flex-shrink-0 flex items-center gap-2 cursor-pointer">
             <img 
-              src={isScrolled ? "/logos/logo-blue.png" : "/logos/logo-white.png"} 
+              src={isActuallyScrolled ? "/logos/logo-blue.png" : "/logos/logo-white.png"} 
               alt="MeiBiz" 
-              className="h-10 md:h-12 w-auto object-contain"
+              className="h-10 md:h-12 w-auto object-contain transition-all duration-300"
             />
           </Link>
 
@@ -291,7 +295,7 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Menu Dropdown */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden bg-white/98 backdrop-blur-md border-t absolute top-full left-0 right-0 h-[calc(100vh-80px)] overflow-y-auto px-4 pt-4 text-slate-900 pb-20 shadow-xl rounded-b-2xl mt-2">
+        <div className="lg:hidden bg-white border-t border-slate-100 absolute top-full left-0 right-0 h-[calc(100vh-64px)] overflow-y-auto px-4 pt-4 text-slate-900 pb-20 shadow-xl rounded-b-2xl mt-0 transition-all duration-300 animate-in fade-in slide-in-from-top-4">
           <div className="space-y-2">
             <div className="border-b border-slate-100 pb-2">
               <button onClick={() => setIsMobileServicesOpen(!isMobileServicesOpen)} className="w-full flex justify-between items-center text-lg font-medium py-3 text-slate-900">
