@@ -379,115 +379,84 @@ export const Dashboard: React.FC = () => {
 
           {/* 5, 3, 6, 11 - Ações Rápidas (Painel de Controlo) */}
           <div className="relative">
-            <div className={`grid grid-cols-2 lg:grid-cols-4 gap-4 ${isFreePlan ? 'pointer-events-none select-none' : ''}`}>
-              <button className="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex flex-col items-center justify-center text-center">
-                 <div className="p-3 bg-slate-200 text-slate-400 rounded-[1rem] mb-3"><FileText size={20} /></div>
-                 <span className="text-sm font-bold text-slate-400">Emitir Nota</span>
+            <div className={`grid grid-cols-2 lg:grid-cols-4 gap-4 ${isFreePlan ? 'opacity-60 cursor-not-allowed select-none' : ''}`}>
+              <button 
+                onClick={() => !isFreePlan && setIsNfModalOpen(true)}
+                className={`p-4 rounded-2xl flex flex-col items-center justify-center text-center transition-all ${isFreePlan 
+                  ? 'bg-slate-50 border border-slate-200 grayscale' 
+                  : 'bg-white border border-brand-100 hover:border-brand-400 shadow-sm hover:shadow-md hover:shadow-brand-500/10 group'}`}
+              >
+                 <div className={`p-3 rounded-[1rem] mb-3 transition-transform ${isFreePlan ? 'bg-slate-200 text-slate-400' : 'bg-brand-50 text-brand-600 group-hover:-translate-y-1'}`}><FileText size={20} /></div>
+                 <span className={`text-sm font-bold ${isFreePlan ? 'text-slate-400' : 'text-slate-800'}`}>Emitir Nota</span>
               </button>
-              <button className="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex flex-col items-center justify-center text-center">
-                 <div className="p-3 bg-slate-200 text-slate-400 rounded-[1rem] mb-3"><DownloadCloud size={20} /></div>
-                 <span className="text-sm font-bold text-slate-400 leading-tight">Baixar DAS<br/>do Mês</span>
+
+              <button 
+                onClick={() => !isFreePlan && handleDownloadDAS()}
+                className={`p-4 rounded-2xl flex flex-col items-center justify-center text-center transition-all ${isFreePlan 
+                  ? 'bg-slate-50 border border-slate-200 grayscale' 
+                  : 'bg-white border border-brand-100 hover:border-brand-400 shadow-sm hover:shadow-md hover:shadow-brand-500/10 group'}`}
+              >
+                 <div className={`p-3 rounded-[1rem] mb-3 transition-transform ${isFreePlan ? 'bg-slate-200 text-slate-400' : 'bg-brand-50 text-brand-600 group-hover:-translate-y-1'}`}><DownloadCloud size={20} /></div>
+                 <span className={`text-sm font-bold leading-tight ${isFreePlan ? 'text-slate-400' : 'text-slate-800'}`}>Baixar DAS<br/>do Mês</span>
               </button>
-              <button className="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex flex-col items-center justify-center text-center">
-                 <div className="p-3 bg-slate-200 text-slate-400 rounded-[1rem] mb-3"><Upload size={20} /></div>
-                 <span className="text-sm font-bold text-slate-400 leading-tight">Enviar<br/>Documento</span>
+
+              <button 
+                onClick={() => !isFreePlan && fileInputRef.current?.click()}
+                className={`p-4 rounded-2xl flex flex-col items-center justify-center text-center transition-all ${isFreePlan 
+                  ? 'bg-slate-50 border border-slate-200 grayscale' 
+                  : 'bg-white border border-brand-100 hover:border-brand-400 shadow-sm hover:shadow-md hover:shadow-brand-500/10 group'}`}
+              >
+                 <div className={`p-3 rounded-[1rem] mb-3 transition-transform ${isFreePlan ? 'bg-slate-200 text-slate-400' : 'bg-brand-50 text-brand-600 group-hover:-translate-y-1'}`}><Upload size={20} /></div>
+                 <span className={`text-sm font-bold leading-tight ${isFreePlan ? 'text-slate-400' : 'text-slate-800'}`}>Enviar<br/>Documento</span>
               </button>
-              <button className="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex flex-col items-center justify-center text-center">
-                 <div className="p-3 bg-slate-200 text-slate-400 rounded-[1rem] mb-3"><LifeBuoy size={20} /></div>
-                 <span className="text-sm font-bold text-slate-400 leading-tight">Abrir<br/>Chamado</span>
+
+              <button 
+                onClick={() => !isFreePlan && setIsSupportModalOpen(true)}
+                className={`p-4 rounded-2xl flex flex-col items-center justify-center text-center transition-all ${isFreePlan 
+                  ? 'bg-slate-50 border border-slate-200 grayscale' 
+                  : 'bg-white border border-brand-100 hover:border-brand-400 shadow-sm hover:shadow-md hover:shadow-brand-500/10 group'}`}
+              >
+                 <div className={`p-3 rounded-[1rem] mb-3 transition-transform ${isFreePlan ? 'bg-slate-200 text-slate-400' : 'bg-brand-50 text-brand-600 group-hover:-translate-y-1'}`}><LifeBuoy size={20} /></div>
+                 <span className={`text-sm font-bold leading-tight ${isFreePlan ? 'text-slate-400' : 'text-slate-800'}`}>Abrir<br/>Chamado</span>
               </button>
             </div>
-            <input type="file" ref={fileInputRef} className="hidden" onChange={handleUploadDocument} />
+            <input type="file" ref={fileInputRef} className="hidden" onChange={handleUploadDocument} id="dashboard-upload" title="Carregar documento" />
 
-            {/* Overlay de bloqueio - Plano Grátis */}
+            {/* Overlay de bloqueio Simplificado - Plano Grátis */}
             {isFreePlan && (
-              <div className="absolute inset-0 bg-white/80 backdrop-blur-[2px] rounded-2xl flex flex-col items-center justify-center gap-3 border border-amber-200 z-10">
-                <div className="w-12 h-12 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center">
-                  <Shield size={22} className="text-amber-500" />
-                </div>
-                <div className="text-center px-4">
-                  <p className="text-sm font-bold text-slate-800">Serviços bloqueados</p>
-                  <p className="text-xs text-slate-500 mt-1">Ações contábeis disponíveis a partir do <strong>MEI START R$89/mês</strong></p>
-                </div>
+              <div className="absolute inset-0 bg-white/40 backdrop-blur-[1px] rounded-2xl flex flex-col items-center justify-center gap-2 z-10">
                 <Button variant="primary" size="sm" onClick={handleUpgradeIntent}>Desbloquear Agora</Button>
-              </div>
-            )}
-
-            {/* Botões reais (visíveis apenas para planos pagos) */}
-            {!isFreePlan && (
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-0" style={{marginTop: '-100%', position: 'relative', zIndex: 5}}>
-                <button onClick={() => setIsNfModalOpen(true)} className="bg-white border border-brand-100 hover:border-brand-400 p-4 rounded-2xl shadow-sm hover:shadow-md hover:shadow-brand-500/10 transition-all flex flex-col items-center justify-center text-center group">
-                   <div className="p-3 bg-brand-50 text-brand-600 rounded-[1rem] mb-3 transition-transform group-hover:-translate-y-1"><FileText size={20} /></div>
-                   <span className="text-sm font-bold text-slate-800">Emitir Nota</span>
-                </button>
-                <button onClick={handleDownloadDAS} className="bg-white border border-brand-100 hover:border-brand-400 p-4 rounded-2xl shadow-sm hover:shadow-md hover:shadow-brand-500/10 transition-all flex flex-col items-center justify-center text-center group">
-                   <div className="p-3 bg-brand-50 text-brand-600 rounded-[1rem] mb-3 transition-transform group-hover:-translate-y-1"><DownloadCloud size={20} /></div>
-                   <span className="text-sm font-bold text-slate-800 leading-tight">Baixar DAS<br/>do Mês</span>
-                </button>
-                <button onClick={() => fileInputRef.current?.click()} className="bg-white border border-brand-100 hover:border-brand-400 p-4 rounded-2xl shadow-sm hover:shadow-md hover:shadow-brand-500/10 transition-all flex flex-col items-center justify-center text-center group">
-                   <div className="p-3 bg-brand-50 text-brand-600 rounded-[1rem] mb-3 transition-transform group-hover:-translate-y-1"><Upload size={20} /></div>
-                   <span className="text-sm font-bold text-slate-800 leading-tight">Enviar<br/>Documento</span>
-                </button>
-                <button onClick={() => setIsSupportModalOpen(true)} className="bg-white border border-brand-100 hover:border-brand-400 p-4 rounded-2xl shadow-sm hover:shadow-md hover:shadow-brand-500/10 transition-all flex flex-col items-center justify-center text-center group">
-                   <div className="p-3 bg-brand-50 text-brand-600 rounded-[1rem] mb-3 transition-transform group-hover:-translate-y-1"><LifeBuoy size={20} /></div>
-                   <span className="text-sm font-bold text-slate-800 leading-tight">Abrir<br/>Chamado</span>
-                </button>
               </div>
             )}
           </div>
 
-
-          {/* 17. Cofre de Documentos */}
+          {/* 17. Cofre de Documentos (Unificado) */}
           <div className="relative bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
-            {/* Conteúdo do cofre (SEMPRE renderizado) */}
-            <div className={`p-6 md:p-8 ${isFreePlan ? 'opacity-30 pointer-events-none select-none' : ''}`}>
+            <div className="p-6 md:p-8">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="font-bold text-slate-900">Cofre Digital</h3>
               </div>
-              <div className="flex gap-2 mb-6 border-b border-slate-100 pb-2">
-                {['todos', 'impostos', 'notas'].map((t) => (
-                  <button key={t} className={`px-4 py-1.5 rounded-full text-xs font-bold capitalize ${t === 'todos' ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-500'}`}>{t}</button>
-                ))}
-              </div>
-              <div className="flex flex-col items-center justify-center gap-3 p-8 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200">
-                <FileText size={32} className="text-slate-300" />
-                <p className="text-sm text-slate-500">Seus documentos contábeis aparecerão aqui.</p>
-              </div>
-            </div>
-
-            {/* Overlay bloqueio para plano grátis */}
-            {isFreePlan && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 bg-white/60 backdrop-blur-[3px]">
-                <div className="w-14 h-14 rounded-2xl bg-slate-900 flex items-center justify-center shadow-xl">
-                  <FileCheck size={26} className="text-brand-400" />
-                </div>
-                <div className="text-center">
-                  <p className="font-bold text-slate-900 mb-1">Cofre Digital Bloqueado</p>
-                  <p className="text-xs text-slate-500 max-w-xs">Receba seus documentos fiscais, DAS, notas e relatórios organizados na nuvem. Disponível a partir do <strong>MEI START</strong>.</p>
-                </div>
-                <Button variant="primary" size="sm" onClick={handleUpgradeIntent}>Desbloquear Cofre</Button>
-              </div>
-            )}
-
-            {/* Conteúdo real para planos pagos */}
-            {!isFreePlan && (
-              <div className="px-6 md:px-8 pb-6 md:pb-8 -mt-8">
+              
+              <div className={`transition-all ${isFreePlan ? 'opacity-30 pointer-events-none select-none blur-[2px]' : ''}`}>
                 <div className="flex gap-2 mb-6 border-b border-slate-100 pb-2 overflow-x-auto">
                   {['todos', 'impostos', 'notas'].map((t) => (
                     <button
                       key={t}
-                      onClick={() => setActiveDocTab(t as any)}
+                      onClick={() => !isFreePlan && setActiveDocTab(t as any)}
                       className={`px-4 py-1.5 rounded-full text-xs font-bold capitalize transition-all ${activeDocTab === t ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-500 hover:bg-slate-100'}`}
                     >{t}</button>
                   ))}
                 </div>
+
                 <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
                   {loadingDocs ? (
                     <div className="flex items-center justify-center p-8 text-slate-400"><Loader2 size={24} className="animate-spin" /></div>
                   ) : filteredDocs.length === 0 ? (
                     <div className="flex flex-col items-center justify-center gap-3 p-8 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200">
                       <FileText size={32} className="text-slate-300" />
-                      <p className="text-sm text-slate-500 max-w-xs">Ainda não existem documentos nesta categoria.</p>
+                      <p className="text-sm text-slate-500 max-w-xs">
+                        {isFreePlan ? 'Seus documentos contábeis aparecerão aqui.' : 'Ainda não existem documentos nesta categoria.'}
+                      </p>
                     </div>
                   ) : (
                     filteredDocs.map((doc, index) => (
@@ -499,40 +468,36 @@ export const Dashboard: React.FC = () => {
                             <p className="text-xs text-slate-400 mt-0.5">Adicionado em {new Date(doc.created_at).toLocaleDateString('pt-BR')}</p>
                           </div>
                         </div>
-                        <button onClick={() => downloadDocument(doc.name)} className="p-2 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors"><DownloadCloud size={18} /></button>
+                        <button onClick={() => downloadDocument(doc.name)} className="p-2 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors" title={`Baixar ${doc.name}`} aria-label={`Baixar ${doc.name}`}><DownloadCloud size={18} /></button>
                       </div>
                     ))
                   )}
                 </div>
               </div>
-            )}
+
+              {/* Overlay bloqueio para plano grátis */}
+              {isFreePlan && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 bg-white/40 backdrop-blur-[1px] mt-12">
+                  <div className="w-14 h-14 rounded-2xl bg-slate-900 flex items-center justify-center shadow-xl">
+                    <FileCheck size={26} className="text-brand-400" />
+                  </div>
+                  <div className="text-center">
+                    <p className="font-bold text-slate-900 mb-1">Cofre Digital Bloqueado</p>
+                    <p className="text-xs text-slate-500 max-w-xs">Receba seus documentos fiscais, DAS, notas e relatórios organizados na nuvem. Disponível a partir do <strong>MEI START</strong>.</p>
+                  </div>
+                  <Button variant="primary" size="sm" onClick={handleUpgradeIntent}>Desbloquear Cofre</Button>
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* 18. Chamados de Atendimento */}
+          {/* 18. Chamados de Atendimento (Unificado) */}
           <div className="relative bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden mb-6">
-            <div className={`p-6 md:p-8 ${isFreePlan ? 'opacity-30 pointer-events-none select-none' : ''}`}>
+            <div className="p-6 md:p-8">
               <h3 className="font-bold text-slate-900 flex items-center gap-2 mb-2"><MessageSquare size={18} className="text-brand-500"/> Meus Chamados de Atendimento</h3>
-              <p className="text-xs text-slate-500 mb-6 flex items-center gap-1.5 bg-slate-50 border border-slate-200 p-2 rounded-lg w-fit"><Clock size={14} className="text-brand-500"/> Prazo de resposta: <strong className="text-slate-700">até 4 horas úteis</strong>.</p>
-              <div className="p-6 text-center text-slate-400 bg-slate-50 rounded-2xl border border-dashed border-slate-200">Nenhum chamado aberto.</div>
-            </div>
-
-            {/* Overlay bloqueio */}
-            {isFreePlan && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 bg-white/60 backdrop-blur-[3px]">
-                <div className="w-14 h-14 rounded-2xl bg-slate-900 flex items-center justify-center shadow-xl">
-                  <MessageSquare size={26} className="text-brand-400" />
-                </div>
-                <div className="text-center">
-                  <p className="font-bold text-slate-900 mb-1">Atendimento Bloqueado</p>
-                  <p className="text-xs text-slate-500 max-w-xs">Abra chamados, receba suporte especializado e fale com sua equipa contábil. Disponível a partir do <strong>MEI START</strong>.</p>
-                </div>
-                <Button variant="primary" size="sm" onClick={handleUpgradeIntent}>Ativar Atendimento</Button>
-              </div>
-            )}
-
-            {/* Chamados reais para planos pagos */}
-            {!isFreePlan && (
-              <div className="px-6 md:px-8 pb-6 md:pb-8 -mt-8">
+              <div className={`transition-all ${isFreePlan ? 'opacity-30 pointer-events-none select-none blur-[2px]' : ''}`}>
+                <p className="text-xs text-slate-500 mb-6 flex items-center gap-1.5 bg-slate-50 border border-slate-200 p-2 rounded-lg w-fit"><Clock size={14} className="text-brand-500"/> Prazo de resposta: <strong className="text-slate-700">até 4 horas úteis</strong>.</p>
+                
                 <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
                   {myTickets.length === 0 ? (
                     <div className="p-6 text-center text-slate-400 bg-slate-50 rounded-2xl border border-dashed border-slate-200">Você ainda não possui chamados abertos.</div>
@@ -559,7 +524,21 @@ export const Dashboard: React.FC = () => {
                   )}
                 </div>
               </div>
-            )}
+
+              {/* Overlay bloqueio */}
+              {isFreePlan && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 bg-white/40 backdrop-blur-[1px] mt-12">
+                  <div className="w-14 h-14 rounded-2xl bg-slate-900 flex items-center justify-center shadow-xl">
+                    <MessageSquare size={26} className="text-brand-400" />
+                  </div>
+                  <div className="text-center">
+                    <p className="font-bold text-slate-900 mb-1">Atendimento Bloqueado</p>
+                    <p className="text-xs text-slate-500 max-w-xs">Abra chamados, receba suporte especializado e fale com sua equipa contábil. Disponível a partir do <strong>MEI START</strong>.</p>
+                  </div>
+                  <Button variant="primary" size="sm" onClick={handleUpgradeIntent}>Ativar Atendimento</Button>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Acordeão do Perfil (Formulário Antigo Recolhível) */}
@@ -655,10 +634,10 @@ export const Dashboard: React.FC = () => {
           <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
             <h3 className="font-bold text-slate-900 mb-4 text-sm">Links Oficiais GOV</h3>
              <div className="grid grid-cols-2 gap-2">
-               <a href="https://acesso.gov.br/" target="_blank" className="flex flex-col items-center gap-2 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-transparent hover:border-slate-200 text-slate-600">
+               <a href="https://acesso.gov.br/" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-transparent hover:border-slate-200 text-slate-600">
                  <ExternalLink size={16} /> <span className="text-[10px] font-bold">Gov.br</span>
                </a>
-               <a href="https://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/Identificacao" target="_blank" className="flex flex-col items-center gap-2 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-transparent hover:border-slate-200 text-slate-600">
+               <a href="https://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgmei.app/Identificacao" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors border border-transparent hover:border-slate-200 text-slate-600">
                  <ExternalLink size={16} /> <span className="text-[10px] font-bold">PGMEI</span>
                </a>
              </div>
@@ -673,7 +652,7 @@ export const Dashboard: React.FC = () => {
       {isNfModalOpen && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl relative">
-            <button onClick={() => setIsNfModalOpen(false)} className="absolute top-4 right-4 text-slate-400 hover:bg-slate-100 p-2 rounded-full"><X size={20}/></button>
+            <button onClick={() => setIsNfModalOpen(false)} className="absolute top-4 right-4 text-slate-400 hover:bg-slate-100 p-2 rounded-full" title="Fechar" aria-label="Fechar"><X size={20}/></button>
             <div className="w-12 h-12 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center mb-6"><FileText size={24}/></div>
             <h2 className="text-2xl font-bold text-slate-900 mb-2">Solicitar Emissão</h2>
             <p className="text-sm text-slate-500 mb-6">Preencha os dados básicos. A nossa equipa emitirá a nota e disponibilizará no cofre.</p>
@@ -690,7 +669,7 @@ export const Dashboard: React.FC = () => {
       {isSupportModalOpen && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl relative">
-            <button onClick={() => { setIsSupportModalOpen(false); setShowTicketForm(false); setTicketText(''); }} className="absolute top-4 right-4 text-slate-400 hover:bg-slate-100 p-2 rounded-full"><X size={20}/></button>
+            <button onClick={() => { setIsSupportModalOpen(false); setShowTicketForm(false); setTicketText(''); }} className="absolute top-4 right-4 text-slate-400 hover:bg-slate-100 p-2 rounded-full" title="Fechar" aria-label="Fechar"><X size={20}/></button>
             <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6"><MessageSquare size={32}/></div>
             
             {!showTicketForm ? (
@@ -728,7 +707,7 @@ export const Dashboard: React.FC = () => {
       {isUpgradeModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm">
           <div className="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl relative">
-            <button onClick={() => setIsUpgradeModalOpen(false)} className="absolute top-4 right-4 p-2 text-slate-400 bg-slate-100 hover:bg-slate-200 rounded-full z-10"><X size={20} /></button>
+            <button onClick={() => setIsUpgradeModalOpen(false)} className="absolute top-4 right-4 p-2 text-slate-400 bg-slate-100 hover:bg-slate-200 rounded-full z-10" title="Fechar" aria-label="Fechar"><X size={20} /></button>
             <div className="p-8 md:p-12">
               <div className="text-center max-w-2xl mx-auto mb-12">
                 <h2 className="text-3xl font-bold text-slate-900 mb-4">Complete a sua contabilidade</h2>
