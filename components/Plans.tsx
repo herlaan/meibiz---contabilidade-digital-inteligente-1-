@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Check, Star, Building2, Wrench } from 'lucide-react';
 import { Button } from './Button';
+import { TouchCarousel } from './TouchCarousel';
 
 type PlanCategory = 'comercio' | 'servico';
 
@@ -112,7 +113,10 @@ export const Plans: React.FC = () => {
 
         {/* MOBILE: Infinite Marquee (Looping) */}
         <div className="lg:hidden relative w-full -mx-4 mb-8">
-             <div className="flex gap-4 animate-marquee-slow pause-on-hover w-max px-4">
+          <TouchCarousel
+            className="w-full"
+            innerClassName="flex gap-4 animate-marquee-slow pause-on-hover w-max px-4"
+          >
                 {[...currentPlans, ...currentPlans].map((plan, index) => (
                     <div 
                       key={`mob-plan-${index}`}
@@ -159,9 +163,9 @@ export const Plans: React.FC = () => {
                           ))}
                       </div>
                     </div>
-                ))}
-             </div>
-             <p className="text-center text-xs text-slate-400 mt-4 animate-pulse">Toque no card para pausar</p>
+              ))}
+          </TouchCarousel>
+          <p className="text-center text-xs text-slate-400 mt-4 animate-pulse">Arraste para explorar os planos</p>
         </div>
 
 

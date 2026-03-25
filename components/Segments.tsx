@@ -1,5 +1,6 @@
 import React from 'react';
 import { Briefcase, ShoppingBag, User, Stethoscope, ArrowRight } from 'lucide-react';
+import { TouchCarousel } from './TouchCarousel';
 
 export const Segments: React.FC = () => {
   const segments = [
@@ -41,19 +42,20 @@ export const Segments: React.FC = () => {
 
         {/* Mobile: Infinite Marquee */}
         <div className="lg:hidden relative w-full -mx-4">
-             {/* Gradients removed */}
-             
-             <div className="flex gap-4 animate-marquee-reverse pause-on-hover w-max px-4">
-                {[...segments, ...segments].map((segment, index) => (
-                    <div key={`mob-seg-${index}`} className="w-[260px] flex-shrink-0 group p-6 rounded-xl border border-slate-200 bg-white">
-                        <div className="w-14 h-14 bg-brand-50 rounded-lg flex items-center justify-center text-brand-600 mb-4">
-                            {segment.icon}
-                        </div>
-                        <h3 className="text-lg font-medium text-slate-900 mb-2">{segment.title}</h3>
-                        <p className="text-slate-500 text-sm mb-4 leading-relaxed">{segment.desc}</p>
-                    </div>
-                ))}
-             </div>
+          <TouchCarousel
+            className="w-full"
+            innerClassName="flex gap-4 animate-marquee-reverse pause-on-hover w-max px-4"
+          >
+             {[...segments, ...segments].map((segment, index) => (
+                 <div key={`mob-seg-${index}`} className="w-[260px] flex-shrink-0 group p-6 rounded-xl border border-slate-200 bg-white">
+                     <div className="w-14 h-14 bg-brand-50 rounded-lg flex items-center justify-center text-brand-600 mb-4">
+                         {segment.icon}
+                     </div>
+                     <h3 className="text-lg font-medium text-slate-900 mb-2">{segment.title}</h3>
+                     <p className="text-slate-500 text-sm mb-4 leading-relaxed">{segment.desc}</p>
+                 </div>
+             ))}
+          </TouchCarousel>
         </div>
 
         {/* Desktop: Grid */}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Star, CheckCircle2, Quote } from 'lucide-react';
+import { TouchCarousel } from './TouchCarousel';
 
 export const SocialProof: React.FC = () => {
   const reviews = [
@@ -72,47 +73,46 @@ export const SocialProof: React.FC = () => {
 
         {/* Reviews - Infinite Marquee for Mobile */}
         <div className="lg:hidden relative w-full -mx-4">
-             {/* Gradients removed */}
-
-             <div className="flex gap-4 animate-marquee-slow pause-on-hover w-max px-4">
-               {[...reviews, ...reviews].map((review, idx) => (
-                <div 
-                  key={`mob-rev-${idx}`} 
-                  className="w-[320px] flex-shrink-0 bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm"
-                >
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="flex items-center gap-4">
-                       <div className="relative">
-                         <img 
-                            src={review.image} 
-                            alt={review.name} 
-                            className="w-12 h-12 rounded-full object-cover border border-slate-100"
-                         />
-                         <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 shadow-sm">
-                           <CheckCircle2 size={16} className="text-brand-500 fill-brand-50" />
-                         </div>
+          <TouchCarousel
+            className="w-full"
+            innerClassName="flex gap-4 animate-marquee-slow pause-on-hover w-max px-4"
+          >
+             {[...reviews, ...reviews].map((review, idx) => (
+              <div 
+                key={`mob-rev-${idx}`} 
+                className="w-[320px] flex-shrink-0 bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm"
+              >
+                <div className="flex justify-between items-start mb-6">
+                  <div className="flex items-center gap-4">
+                     <div className="relative">
+                       <img 
+                          src={review.image} 
+                          alt={review.name} 
+                          className="w-12 h-12 rounded-full object-cover border border-slate-100"
+                       />
+                       <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 shadow-sm">
+                         <CheckCircle2 size={16} className="text-brand-500 fill-brand-50" />
                        </div>
-                       <div>
-                          <h3 className="font-bold text-slate-900 text-sm">{review.name}</h3>
-                          <p className="text-xs text-slate-500">{review.role}</p>
-                       </div>
-                    </div>
-                    <Quote size={20} className="text-brand-100 fill-brand-50" />
-                  </div>
-
-                  <p className="text-slate-600 leading-relaxed text-sm mb-6 relative z-10 min-h-[60px]">
-                    "{review.text}"
-                  </p>
-
-                  <div className="pt-6 border-t border-slate-50 flex justify-between items-center">
-                     <div className="flex text-yellow-400 gap-1">
-                        {[...Array(5)].map((_, i) => <Star key={i} size={14} fill="currentColor" />)}
                      </div>
-                     <span className="text-xs text-slate-400 font-medium">{review.date}</span>
+                     <div>
+                        <h3 className="font-bold text-slate-900 text-sm">{review.name}</h3>
+                        <p className="text-xs text-slate-500">{review.role}</p>
+                     </div>
                   </div>
+                  <Quote size={20} className="text-brand-100 fill-brand-50" />
                 </div>
-               ))}
-             </div>
+                <p className="text-slate-600 leading-relaxed text-sm mb-6 relative z-10 min-h-[60px]">
+                  "{review.text}"
+                </p>
+                <div className="pt-6 border-t border-slate-50 flex justify-between items-center">
+                   <div className="flex text-yellow-400 gap-1">
+                      {[...Array(5)].map((_, i) => <Star key={i} size={14} fill="currentColor" />)}
+                   </div>
+                   <span className="text-xs text-slate-400 font-medium">{review.date}</span>
+                </div>
+              </div>
+             ))}
+          </TouchCarousel>
         </div>
         
         {/* Desktop Grid */}

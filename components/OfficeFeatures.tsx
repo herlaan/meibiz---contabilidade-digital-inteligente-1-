@@ -1,6 +1,7 @@
 import React from 'react';
 import { MessageSquare, UserCheck, Wallet, Heart, FileText, ArrowRight } from 'lucide-react';
 import { Button } from './Button';
+import { TouchCarousel } from './TouchCarousel';
 
 export const OfficeFeatures: React.FC = () => {
   const features = [
@@ -56,23 +57,24 @@ export const OfficeFeatures: React.FC = () => {
         </div>
 
         {/* Mobile: Infinite Marquee */}
-        <div className="lg:hidden relative w-full mb-12 -mx-4">
-            {/* Gradients removed */}
-
-            <div className="flex gap-4 animate-marquee pause-on-hover w-max px-4">
-                {[...features, ...features].map((feature, idx) => (
-                    <div 
-                      key={`mob-${idx}`} 
-                      className="bg-slate-50 border border-slate-100 p-6 rounded-2xl w-[280px] flex-shrink-0"
-                    >
-                        <div className={`${feature.color} w-12 h-12 rounded-xl flex items-center justify-center mb-4 shadow-md`}>
-                            {feature.icon}
-                        </div>
-                        <h3 className="text-lg font-medium text-slate-900 mb-2">{feature.title}</h3>
-                        <p className="text-slate-500 text-sm leading-relaxed">{feature.desc}</p>
-                    </div>
-                ))}
-            </div>
+        <div className="lg:hidden relative w-full -mx-4">
+          <TouchCarousel
+            className="w-full"
+            innerClassName="flex gap-4 animate-marquee pause-on-hover w-max px-4"
+          >
+              {[...features, ...features].map((feature, idx) => (
+                  <div 
+                    key={`mob-${idx}`} 
+                    className="bg-slate-50 border border-slate-100 p-6 rounded-2xl w-[280px] flex-shrink-0"
+                  >
+                      <div className={`${feature.color} w-12 h-12 rounded-xl flex items-center justify-center mb-4 shadow-md`}>
+                          {feature.icon}
+                      </div>
+                      <h3 className="text-lg font-medium text-slate-900 mb-2">{feature.title}</h3>
+                      <p className="text-slate-500 text-sm leading-relaxed">{feature.desc}</p>
+                  </div>
+              ))}
+          </TouchCarousel>
         </div>
 
         {/* Desktop: Grid */}

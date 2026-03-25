@@ -1,5 +1,6 @@
 import React from 'react';
 import { MapPin, FileKey, Scale, PieChart, Landmark, ArrowRight, ChevronRight } from 'lucide-react';
+import { TouchCarousel } from './TouchCarousel';
 
 export const AdditionalSolutions: React.FC = () => {
   const solutions = [
@@ -66,32 +67,26 @@ export const AdditionalSolutions: React.FC = () => {
         
         {/* Mobile: Infinite Marquee */}
         <div className="lg:hidden relative w-full -mx-4">
-            {/* Gradients removed */}
-
-            <div className="flex gap-4 animate-marquee pause-on-hover w-max px-4">
-                {[...solutions, ...solutions].map((item, idx) => (
-                    <div 
-                      key={`mob-sol-${idx}`}
-                      className="group w-[280px] flex-shrink-0 p-8 rounded-[2rem] bg-white shadow-sm border border-slate-100 flex flex-col items-start"
-                    >
-                      <div className={`${item.bg} ${item.color} w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-sm`}>
-                        {item.icon}
-                      </div>
-                      
-                      <h3 className="text-xl font-bold text-slate-900 mb-3">
-                        {item.title}
-                      </h3>
-                      
-                      <p className="text-slate-500 text-sm leading-relaxed mb-6 flex-grow">
-                        {item.desc}
-                      </p>
-                      
-                      <div className="flex items-center text-slate-900 font-medium text-sm w-full">
-                        Ver detalhes <ChevronRight size={16} className="ml-auto" />
-                      </div>
+          <TouchCarousel
+            className="w-full"
+            innerClassName="flex gap-4 animate-marquee pause-on-hover w-max px-4"
+          >
+              {[...solutions, ...solutions].map((item, idx) => (
+                  <div 
+                    key={`mob-sol-${idx}`}
+                    className="group w-[280px] flex-shrink-0 p-8 rounded-[2rem] bg-white shadow-sm border border-slate-100 flex flex-col items-start"
+                  >
+                    <div className={`${item.bg} ${item.color} w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-sm`}>
+                      {item.icon}
                     </div>
-                ))}
-            </div>
+                    <h3 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h3>
+                    <p className="text-slate-500 text-sm leading-relaxed mb-6 flex-grow">{item.desc}</p>
+                    <div className="flex items-center text-slate-900 font-medium text-sm w-full">
+                      Ver detalhes <ChevronRight size={16} className="ml-auto" />
+                    </div>
+                  </div>
+              ))}
+          </TouchCarousel>
         </div>
 
         {/* Desktop: Grid */}

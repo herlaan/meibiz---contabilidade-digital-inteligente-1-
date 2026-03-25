@@ -1,4 +1,5 @@
 import React from 'react';
+import { TouchCarousel } from './TouchCarousel';
 
 export const Team: React.FC = () => {
   const members = [
@@ -37,32 +38,33 @@ export const Team: React.FC = () => {
 
         {/* Mobile: Infinite Marquee | Desktop: Grid */}
         <div className="lg:hidden relative w-full overflow-hidden">
-           {/* Gradients removed as requested */}
-           
-           <div className="flex gap-4 animate-marquee pause-on-hover w-max">
-              {[...members, ...members, ...members].map((member, idx) => (
-                <div 
-                    key={`mobile-${idx}`} 
-                    className="w-[280px] flex-shrink-0 group cursor-default"
-                >
-                  <div className="relative overflow-hidden rounded-[2rem] aspect-[4/5] mb-6 shadow-md border border-slate-100">
-                    <img 
-                      src={member.img} 
-                      alt={member.name} 
-                      className="object-cover w-full h-full grayscale group-hover:grayscale-0 transition-all duration-700" 
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-brand-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div className="absolute bottom-6 left-6 text-white opacity-0 group-hover:opacity-100 transition-all duration-500">
-                        <p className="text-sm font-medium bg-brand-600/90 backdrop-blur-sm px-3 py-1 rounded-full inline-block shadow-sm">CRC Ativo</p>
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <h3 className="text-xl font-medium text-slate-900">{member.name}</h3>
-                    <p className="text-brand-600 font-medium">{member.role}</p>
-                  </div>
-                </div>
-              ))}
-           </div>
+          <TouchCarousel
+            className="w-full"
+            innerClassName="flex gap-4 animate-marquee pause-on-hover w-max"
+          >
+             {[...members, ...members, ...members].map((member, idx) => (
+               <div 
+                   key={`mobile-${idx}`} 
+                   className="w-[280px] flex-shrink-0 group cursor-default"
+               >
+                 <div className="relative overflow-hidden rounded-[2rem] aspect-[4/5] mb-6 shadow-md border border-slate-100">
+                   <img 
+                     src={member.img} 
+                     alt={member.name} 
+                     className="object-cover w-full h-full grayscale group-hover:grayscale-0 transition-all duration-700" 
+                   />
+                   <div className="absolute inset-0 bg-gradient-to-t from-brand-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                   <div className="absolute bottom-6 left-6 text-white opacity-0 group-hover:opacity-100 transition-all duration-500">
+                       <p className="text-sm font-medium bg-brand-600/90 backdrop-blur-sm px-3 py-1 rounded-full inline-block shadow-sm">CRC Ativo</p>
+                   </div>
+                 </div>
+                 <div className="text-center">
+                   <h3 className="text-xl font-medium text-slate-900">{member.name}</h3>
+                   <p className="text-brand-600 font-medium">{member.role}</p>
+                 </div>
+               </div>
+             ))}
+          </TouchCarousel>
         </div>
 
         {/* Desktop: Grid */}
