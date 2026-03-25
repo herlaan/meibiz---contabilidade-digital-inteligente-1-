@@ -6,8 +6,10 @@ import {
   Building2, FileText, MessageSquare, AlertCircle, Phone, MapPin, 
   Briefcase, DollarSign, X, Check, DownloadCloud, Loader2, Calendar, Upload, 
   Bell, ChevronRight, CheckCircle2, Shield, PlayCircle, Gift, ExternalLink, 
-  UserCircle, LifeBuoy, CreditCard, ChevronDown, Clock, Activity, FileCheck
+  UserCircle, LifeBuoy, CreditCard, ChevronDown, Clock, Activity, ArrowRight
 } from 'lucide-react';
+
+/* Structural refresh to prevent Vite 500 crashes */
 
 // NÚMERO DE ATENDIMENTO DA CONTABILIDADE
 const WHATSAPP_NUMBER = '5575988927727'; 
@@ -424,8 +426,8 @@ export const Dashboard: React.FC = () => {
 
             {/* Overlay de bloqueio Simplificado - Plano Grátis */}
             {isFreePlan && (
-              <div className="absolute inset-0 bg-white/40 backdrop-blur-[1px] rounded-2xl flex flex-col items-center justify-center gap-2 z-10">
-                <Button variant="primary" size="sm" onClick={handleUpgradeIntent}>Desbloquear Agora</Button>
+              <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] rounded-2xl flex flex-col items-center justify-center gap-2 z-10 transition-all">
+                <Button variant="primary" size="sm" onClick={handleUpgradeIntent} className="shadow-lg shadow-brand-500/25">Desbloquear Agora</Button>
               </div>
             )}
           </div>
@@ -479,7 +481,7 @@ export const Dashboard: React.FC = () => {
               {isFreePlan && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 bg-white/40 backdrop-blur-[1px] mt-12">
                   <div className="w-14 h-14 rounded-2xl bg-slate-900 flex items-center justify-center shadow-xl">
-                    <FileCheck size={26} className="text-brand-400" />
+                    <CheckCircle2 size={26} className="text-brand-400" />
                   </div>
                   <div className="text-center">
                     <p className="font-bold text-slate-900 mb-1">Cofre Digital Bloqueado</p>

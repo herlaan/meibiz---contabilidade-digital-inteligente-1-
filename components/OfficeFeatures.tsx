@@ -95,7 +95,11 @@ export const OfficeFeatures: React.FC = () => {
         </div>
 
         <div className="text-center reveal delay-500">
-            <Button variant="outline" className="border-brand-200 text-brand-600 hover:bg-brand-50">
+            <Button 
+              variant="outline" 
+              className="border-brand-200 text-brand-600 hover:bg-brand-50 shadow-sm"
+              onClick={() => document.getElementById('planos')?.scrollIntoView({ behavior: 'smooth' })}
+            >
                 Ver todos os planos <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
         </div>
