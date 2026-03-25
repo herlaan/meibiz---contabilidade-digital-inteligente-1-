@@ -148,6 +148,11 @@ export const Navbar: React.FC = () => {
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center">
             <ul className="flex items-center space-x-8">
+              <li>
+                <Link to="/" className={`font-medium transition-colors text-sm ${textColorClass}`}>
+                  Home
+                </Link>
+              </li>
               <li className="relative group">
                 <button className={`flex items-center gap-1 font-medium transition-colors text-sm focus:outline-none py-2 ${textColorClass}`}>
                   Serviços <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-300" />
@@ -297,6 +302,7 @@ export const Navbar: React.FC = () => {
       {isMobileMenuOpen && (
         <div className="lg:hidden bg-white border-t border-slate-100 absolute top-full left-0 right-0 h-[calc(100vh-64px)] overflow-y-auto px-4 pt-4 text-slate-900 pb-20 shadow-xl rounded-b-2xl mt-0 transition-all duration-300 animate-in fade-in slide-in-from-top-4">
           <div className="space-y-2">
+            <Link to="/" className="block text-lg font-medium py-3 border-b border-slate-100 text-slate-600" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
             <div className="border-b border-slate-100 pb-2">
               <button onClick={() => setIsMobileServicesOpen(!isMobileServicesOpen)} className="w-full flex justify-between items-center text-lg font-medium py-3 text-slate-900">
                 Serviços {isMobileServicesOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}

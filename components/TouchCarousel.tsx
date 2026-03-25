@@ -12,6 +12,7 @@ interface TouchCarouselProps {
  * - No desktop: comportamento padrão (hover pausa).
  * - No mobile: toque pausa a animação e permite arrastar manualmente com o dedo.
  *   Ao soltar, a animação retoma após 2s de inatividade.
+ *   Scrolling é ultra-suave, sem travamentos (sem snap).
  */
 export const TouchCarousel: React.FC<TouchCarouselProps> = ({
   children,
@@ -57,7 +58,12 @@ export const TouchCarousel: React.FC<TouchCarouselProps> = ({
   return (
     <div
       className={`overflow-x-auto scrollbar-hide ${className}`}
-      style={{ WebkitOverflowScrolling: 'touch', scrollSnapType: 'x proximity' }}
+      style={{
+        WebkitOverflowScrolling: 'touch',
+        scrollBehavior: 'smooth',
+        msOverflowStyle: 'none',
+        scrollbarWidth: 'none',
+      }}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}

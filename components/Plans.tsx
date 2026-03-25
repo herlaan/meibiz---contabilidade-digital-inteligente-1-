@@ -112,7 +112,7 @@ export const Plans: React.FC = () => {
         </div>
 
         {/* MOBILE: Infinite Marquee (Looping) */}
-        <div className="lg:hidden relative w-full -mx-4 mb-8">
+        <div className="lg:hidden relative w-full -mx-4 mb-8 pt-4">
           <TouchCarousel
             className="w-full"
             innerClassName="flex gap-4 animate-marquee-slow pause-on-hover w-max px-4"

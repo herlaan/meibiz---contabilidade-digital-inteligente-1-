@@ -38,15 +38,6 @@ export const LeaveMeiPage: React.FC<LeaveMeiPageProps> = ({ onBack }) => {
                 <div className="absolute bottom-0 left-0 w-[30rem] h-[30rem] bg-accent-600/20 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/3"></div>
 
                 <div className="max-w-6xl mx-auto relative z-10">
-                    <button
-                        onClick={onBack}
-                        className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-12 sm:mb-16 group w-fit"
-                    >
-                        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-all border border-white/5">
-                            <ArrowLeft size={16} />
-                        </div>
-                        <span className="text-sm font-medium">Voltar para a Home</span>
-                    </button>
 
                     <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
                         <div className="max-w-2xl reveal active">

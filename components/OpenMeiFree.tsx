@@ -109,15 +109,6 @@ Aguardo o retorno do contador para prosseguir!`;
                 <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-brand-600/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
 
                 <div className="max-w-4xl mx-auto relative z-10">
-                    <button
-                        onClick={onBack}
-                        className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-8 group w-fit"
-                    >
-                        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-all border border-white/5">
-                            <ArrowLeft size={16} />
-                        </div>
-                        <span className="text-sm font-medium">Voltar para a Home</span>
-                    </button>
 
                     <div className="text-center reveal active">
                         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium uppercase tracking-wider mb-4">

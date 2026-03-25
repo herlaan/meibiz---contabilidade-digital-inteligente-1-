@@ -34,15 +34,6 @@ export const ProtectedService: React.FC<ProtectedServiceProps> = ({
             <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-600/10 rounded-full blur-[120px] -z-0 opacity-50"></div>
 
             <div className="max-w-4xl mx-auto relative z-10">
-                <button
-                    onClick={onBack}
-                    className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-12 group"
-                >
-                    <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-all">
-                        <ArrowLeft size={16} />
-                    </div>
-                    <span className="text-sm font-medium">Voltar para a Home</span>
-                </button>
 
                 <div className="reveal active">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-600/10 border border-brand-500/20 text-brand-400 text-xs font-bold uppercase tracking-wider mb-6">

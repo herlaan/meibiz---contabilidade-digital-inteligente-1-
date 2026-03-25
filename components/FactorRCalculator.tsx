@@ -26,15 +26,6 @@ export const FactorRCalculator: React.FC<FactorRCalculatorProps> = ({ onBack }) 
             <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-accent-400/10 rounded-full blur-[100px] -z-0 opacity-30"></div>
 
             <div className="max-w-5xl mx-auto relative z-10">
-                <button
-                    onClick={onBack}
-                    className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-12 group"
-                >
-                    <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-all">
-                        <ArrowLeft size={16} />
-                    </div>
-                    <span className="text-sm font-medium">Voltar para a Home</span>
-                </button>
 
                 <div className="grid lg:grid-cols-2 gap-12 items-start">
                     <div className="reveal active">

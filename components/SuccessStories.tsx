@@ -45,12 +45,6 @@ export const SuccessStories: React.FC = () => {
                         <p className="text-slate-400 text-sm">CEO, Studio Clara</p>
                     </div>
                 </div>
-                
-                <div className="hidden sm:block w-px h-10 bg-slate-200"></div>
-                
-                <Button variant="ghost" className="text-brand-600 hover:text-brand-700 p-0 hover:bg-transparent font-medium">
-                    Ler história completa <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
               </div>
             </div>
 
