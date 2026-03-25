@@ -358,12 +358,12 @@ export const Dashboard: React.FC = () => {
         <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4 relative overflow-hidden group">
           <div className="w-14 h-14 bg-gradient-to-tr from-brand-100 to-brand-50 rounded-full flex items-center justify-center p-1 shrink-0">
              <div className="w-full h-full bg-white rounded-full flex items-center justify-center border border-brand-200 text-brand-600 font-bold text-lg">
-                JA {/* Fake Avata Initials */}
+                EA
              </div>
           </div>
           <div className="z-10">
-            <p className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">O seu Contador Dedicado</p>
-            <h3 className="font-bold text-slate-900 mb-1">Julia Albuquerque</h3>
+            <p className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">Apoio Contábil Dedicado</p>
+            <h3 className="font-bold text-slate-900 mb-1">Equipa de Apoio</h3>
             <div className="flex items-center gap-1 text-[10px] bg-green-50 text-green-700 px-2 py-0.5 rounded-full inline-flex font-medium border border-green-100">
                <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
                Resposta em até {isFreePlan ? '24h' : '2h'}

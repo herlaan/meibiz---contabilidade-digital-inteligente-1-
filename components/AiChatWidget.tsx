@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Bot, User, Loader2, Sparkles, AlertCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
 
 interface Message {
     id: string;
@@ -33,9 +34,9 @@ export const AiChatWidget: React.FC = () => {
         scrollToBottom();
     }, [messages, isTyping]);
 
-    if (!isLoggedIn) return null;
+    // AiChat global (disponível quer tenha conta ou não)
 
-    const handleSendMessage = (e: React.FormEvent) => {
+    const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!inputValue.trim()) return;
 
@@ -51,17 +52,33 @@ export const AiChatWidget: React.FC = () => {
         setInputValue('');
         setIsTyping(true);
 
-        // Simula a resposta da IA (será substituído pelo backend real)
-        setTimeout(() => {
+        // Chama a IA (Backend Supabase Edge Function)
+        try {
+            const { data, error } = await supabase.functions.invoke('chat-with-ai', {
+                body: { messages: [...messages, newUserMessage].map(m => ({ type: m.type, content: m.content })) }
+            });
+
+            if (error) throw error;
+
             const newBotMessage: Message = {
                 id: (Date.now() + 1).toString(),
                 type: 'bot',
-                content: 'No momento, minha integração principal ainda está sendo configurada! Mas você sabia que sou treinada na legislação para te ajudar logo logo a crescer o seu MEI?',
+                content: data?.response || 'Tive um pequeno lapso. Pode repetir?',
                 timestamp: new Date()
             };
             setMessages(prev => [...prev, newBotMessage]);
+        } catch (err) {
+            console.error(err);
+            const errorMsg: Message = {
+                id: (Date.now() + 1).toString(),
+                type: 'bot',
+                content: 'Desculpe, estou com problemas de conexão. Mas pode abrir um ticket no menu ao lado para escalar seu pedido à equipa humana!',
+                timestamp: new Date()
+            };
+            setMessages(prev => [...prev, errorMsg]);
+        } finally {
             setIsTyping(false);
-        }, 1500);
+        }
     };
 
     const formatTime = (date: Date) => {

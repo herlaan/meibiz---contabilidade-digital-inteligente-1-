@@ -23,6 +23,7 @@ export const AdminDashboard: React.FC = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [planFilter, setPlanFilter] = useState('todos');
+  const [showCompletedReqs, setShowCompletedReqs] = useState(false);
   
   // Modals and Side Panels
   const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
@@ -37,8 +38,11 @@ export const AdminDashboard: React.FC = () => {
 
   useEffect(() => { 
     fetchProfiles(); 
-    fetchRequests();
   }, []);
+
+  useEffect(() => {
+    fetchRequests();
+  }, [showCompletedReqs]);
 
   const fetchProfiles = async () => {
     setLoading(true);
@@ -49,11 +53,15 @@ export const AdminDashboard: React.FC = () => {
 
   const fetchRequests = async () => {
     setLoadingReqs(true);
-    const { data, error } = await supabase
+    let query = supabase
        .from('service_requests')
-       .select('*, profiles:user_id(full_name, email, document_number)')
-       .neq('status', 'completed')
-       .order('created_at', { ascending: false });
+       .select('*, profiles:user_id(full_name, email, document_number)');
+       
+    if (!showCompletedReqs) {
+       query = query.neq('status', 'completed');
+    }
+    
+    const { data, error } = await query.order('created_at', { ascending: false });
     if (!error && data) setRequests(data as any[]);
     setLoadingReqs(false);
   };
@@ -111,7 +119,7 @@ export const AdminDashboard: React.FC = () => {
   const updateReqStatus = async (id: string, status: string) => {
     const { error } = await supabase.from('service_requests').update({ status }).eq('id', id);
     if (!error) {
-       if (status === 'completed') {
+       if (status === 'completed' && !showCompletedReqs) {
            // Arquivar imediatamente da vista
            setRequests(requests.filter(r => r.id !== id));
        } else {
@@ -167,7 +175,12 @@ export const AdminDashboard: React.FC = () => {
 
       {/* Caixa de Entrada (Solicitações) */}
       <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm relative overflow-hidden">
-        <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2"><Inbox className="text-brand-500"/> Caixa de Entrada de Serviços</h2>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+          <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2"><Inbox className="text-brand-500"/> Caixa de Entrada de Serviços</h2>
+          <Button variant={showCompletedReqs ? 'primary' : 'outline'} size="sm" onClick={() => setShowCompletedReqs(!showCompletedReqs)}>
+            {showCompletedReqs ? 'Ocultar Arquivados' : 'Ver Arquivados'}
+          </Button>
+        </div>
         <div className="overflow-x-auto">
           {loadingReqs ? (
             <div className="py-8 flex justify-center"><Loader2 className="animate-spin text-slate-300" size={24}/></div>
