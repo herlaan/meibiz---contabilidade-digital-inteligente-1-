@@ -23,10 +23,19 @@ serve(async (req) => {
   }
 
   if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
-    const userId = session.client_reference_id;
+    const session = event.data.object as Stripe.Checkout.Session;
     
-    // Tática alternativa inteligente: Identificar o plano pelo valor pago!
+    // 1. MITIGAÇÃO CRÍTICA: Avaliação Obrigatória do Pagamento (Ex: Boleto pendente)
+    if (session.payment_status !== 'paid') {
+      console.log('Sessão completa, mas pagamento não efetuado (ex: Boleto aguardando). Ignorando Upgrade temporariamente.');
+      return new Response(JSON.stringify({ received: true, status: 'unpaid_ignored' }), { status: 200 });
+    }
+
+    const userId = session.client_reference_id;
+    if (!userId) {
+       return new Response('User ID ausente no client_reference', { status: 400 });
+    }
+    
     const amountPaid = session.amount_total;
     let planType = 'premium'; // default
     
@@ -39,17 +48,16 @@ serve(async (req) => {
     } else if (session.metadata?.plano) {
       planType = session.metadata.plano; // Tenta o metadado como último recurso
     }
-    if (userId) {
-      const supabaseAdmin = createClient(
-        Deno.env.get('SUPABASE_URL') ?? '',
-        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-      )
 
-      await supabaseAdmin
-        .from('profiles')
-        .update({ plan_type: planType, updated_at: new Date().toISOString() })
-        .eq('id', userId)
-    }
+    const supabaseAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    )
+
+    await supabaseAdmin
+      .from('profiles')
+      .update({ plan_type: planType, updated_at: new Date().toISOString() })
+      .eq('id', userId)
   }
 
   return new Response(JSON.stringify({ received: true }), { status: 200 })

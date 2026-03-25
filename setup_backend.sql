@@ -35,11 +35,10 @@ ON public.service_requests FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 DROP POLICY IF EXISTS "Administradores podem ler/escrever tudo" ON public.service_requests;
 CREATE POLICY "Administradores podem ler/escrever tudo"
-ON public.service_requests FOR ALL USING (
-  EXISTS(
-    SELECT 1 FROM profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
-  )
-);
+ON public.service_requests 
+FOR ALL 
+USING ( (SELECT role FROM public.profiles WHERE id = auth.uid() LIMIT 1) = 'admin' )
+WITH CHECK ( (SELECT role FROM public.profiles WHERE id = auth.uid() LIMIT 1) = 'admin' );
 
 -- 2. Atualização da tabela Profiles para suportar Status da DASN e Variáveis Dinâmicas
 -- Adicionando as colunas caso não existam
@@ -62,9 +61,34 @@ BEGIN
     END IF;
 END $$;
 
--- 3. Atualizar/Configurar o Bucket de Documentos para permitir Uploads dos Clientes
--- Note: O bucket "documentos" já existe. Certifique-se de que a política "Usuários podem fazer upload" está ativa:
--- (A Política abaixo é um exemplo que você deve garantir que está configurada na interface Storage do Supabase)
--- 
--- CREATE POLICY "Utilizador autenticado pode fazer upload" 
--- ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'documentos' AND auth.uid() = owner);
+-- 3. Atualizar/Configurar o Bucket de Documentos com Segurança IDOR (Acesso Restrito)
+-- Força que apenas o dono do UUID possa ler os seus ficheiros da pasta!
+DROP POLICY IF EXISTS "Apenas dono acede aos ficheiros" ON storage.objects;
+CREATE POLICY "Apenas dono acede aos ficheiros"
+ON storage.objects FOR SELECT 
+USING (
+  bucket_id = 'documentos' 
+  AND (storage.foldername(name))[1] = auth.uid()::text
+);
+
+-- 4. MITIGAÇÃO CRÍTICA (Escalonamento de Privilégios/Mass Assignment)
+-- Impede que utilizadores comuns burlem o RLS injetando 'role=admin' ou mudando o 'plan_type' via React
+CREATE OR REPLACE FUNCTION public.protect_critical_columns()
+RETURNS trigger AS $$
+BEGIN
+  -- Se quem está a fazer UPDATE for o front-end comum (anon/authenticated), congela estes campos
+  IF current_setting('request.jwt.claims', true)::json->>'role' != 'service_role' THEN
+      NEW.role = OLD.role;
+      NEW.plan_type = OLD.plan_type;
+      NEW.dasn_status = OLD.dasn_status;
+      NEW.tax_savings = OLD.tax_savings;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS trg_protect_critical_columns ON public.profiles;
+CREATE TRIGGER trg_protect_critical_columns
+BEFORE UPDATE ON public.profiles
+FOR EACH ROW
+EXECUTE FUNCTION public.protect_critical_columns();

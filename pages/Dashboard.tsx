@@ -528,11 +528,11 @@ export const Dashboard: React.FC = () => {
                     {/* (Mesmo form de antes, compactado verticalmente) */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div><label className="text-xs font-bold text-slate-600 mb-1 block">Tipo Doc</label><select className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm" value={documentType} onChange={e=>setDocumentType(e.target.value)}><option>CNPJ</option><option>CPF</option></select></div>
-                      <div><label className="text-xs font-bold text-slate-600 mb-1 block">Número</label><input type="text" className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm" placeholder="00.000.000/0000-00" value={documentNumber} onChange={e=>setDocumentNumber(e.target.value)}/></div>
-                      <div className="md:col-span-2"><label className="text-xs font-bold text-slate-600 mb-1 block">Razão Social</label><input type="text" required className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm" value={companyName} onChange={e=>setCompanyName(e.target.value)}/></div>
-                      <div><label className="text-xs font-bold text-slate-600 mb-1 block">Telefone</label><input type="tel" className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm" value={phone} onChange={e=>setPhone(e.target.value)}/></div>
-                      <div><label className="text-xs font-bold text-slate-600 mb-1 block">CEP</label><input type="text" className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm" value={zipCode} onChange={e=>setZipCode(e.target.value)}/></div>
-                      <div className="md:col-span-2"><label className="text-xs font-bold text-slate-600 mb-1 block">Ramo de Atuação</label><input type="text" className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm" value={businessSegment} onChange={e=>setBusinessSegment(e.target.value)}/></div>
+                      <div><label className="text-xs font-bold text-slate-600 mb-1 block">Número</label><input type="text" maxLength={18} className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm" placeholder="00.000.000/0000-00" value={documentNumber} onChange={e=>setDocumentNumber(e.target.value)}/></div>
+                      <div className="md:col-span-2"><label className="text-xs font-bold text-slate-600 mb-1 block">Razão Social</label><input type="text" maxLength={100} required className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm" value={companyName} onChange={e=>setCompanyName(e.target.value)}/></div>
+                      <div><label className="text-xs font-bold text-slate-600 mb-1 block">Telefone</label><input type="tel" maxLength={15} className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm" value={phone} onChange={e=>setPhone(e.target.value.replace(/\D/g, ''))}/></div>
+                      <div><label className="text-xs font-bold text-slate-600 mb-1 block">CEP</label><input type="text" maxLength={9} className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm" value={zipCode} onChange={e=>setZipCode(e.target.value)}/></div>
+                      <div className="md:col-span-2"><label className="text-xs font-bold text-slate-600 mb-1 block">Ramo de Atuação</label><input type="text" maxLength={50} className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm" value={businessSegment} onChange={e=>setBusinessSegment(e.target.value)}/></div>
                     </div>
                     {saveMessage && <div className={`p-4 rounded-xl text-sm ${saveMessage.type==='success'?'bg-green-50 text-green-700':'bg-red-50 text-red-700'}`}>{saveMessage.text}</div>}
                     <div className="flex justify-end pt-4"><Button variant="outline" size="sm" type="submit" disabled={isSaving}>{isSaving ? 'A guardar...' : 'Guardar Alterações'}</Button></div>
@@ -625,8 +625,8 @@ export const Dashboard: React.FC = () => {
             <h2 className="text-2xl font-bold text-slate-900 mb-2">Solicitar Emissão</h2>
             <p className="text-sm text-slate-500 mb-6">Preencha os dados básicos. A nossa equipa emitirá a nota e disponibilizará no cofre.</p>
             <div className="space-y-4">
-              <div><label className="text-xs font-bold text-slate-700 block mb-1">CNPJ/CPF do Cliente</label><input type="text" value={nfClientDoc} onChange={e => setNfClientDoc(e.target.value)} className="w-full border rounded-xl p-3 text-sm focus:ring-2 focus:ring-brand-500" placeholder="00.000.000/0000-00"/></div>
-              <div><label className="text-xs font-bold text-slate-700 block mb-1">Valor do Serviço (R$)</label><input type="number" value={nfValue} onChange={e => setNfValue(e.target.value)} className="w-full border rounded-xl p-3 text-sm focus:ring-2 focus:ring-brand-500" placeholder="Ex: 1500.00"/></div>
+              <div><label className="text-xs font-bold text-slate-700 block mb-1">CNPJ/CPF do Cliente</label><input type="text" maxLength={18} value={nfClientDoc} onChange={e => setNfClientDoc(e.target.value)} className="w-full border rounded-xl p-3 text-sm focus:ring-2 focus:ring-brand-500" placeholder="00.000.000/0000-00"/></div>
+              <div><label className="text-xs font-bold text-slate-700 block mb-1">Valor do Serviço (R$)</label><input type="number" max="999999" value={nfValue} onChange={e => setNfValue(e.target.value)} className="w-full border rounded-xl p-3 text-sm focus:ring-2 focus:ring-brand-500" placeholder="Ex: 1500.00"/></div>
               <Button fullWidth onClick={handleSubmitNf} disabled={isSubmittingNf}>{isSubmittingNf ? 'Enviando...' : 'Enviar Pedido'}</Button>
             </div>
           </div>
@@ -654,6 +654,7 @@ export const Dashboard: React.FC = () => {
                 <p className="text-sm text-slate-500 mb-6 text-center">Descreva a sua dúvida ou solicitação e a nossa equipa entrará em contacto.</p>
                 <div className="space-y-4">
                    <textarea 
+                     maxLength={2500}
                      value={ticketText} onChange={e => setTicketText(e.target.value)} 
                      rows={4}
                      className="w-full border rounded-xl p-3 text-sm focus:ring-2 focus:ring-brand-500 custom-scrollbar" 

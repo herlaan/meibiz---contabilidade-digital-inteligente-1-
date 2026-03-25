@@ -29,7 +29,11 @@ export const Register: React.FC = () => {
     });
 
     if (error) {
-      setError(error.message);
+      setError(
+        error.message.includes('already registered') || error.message.includes('exists')
+          ? 'Não foi possível prosseguir: ou ocorreu um erro de sistema ou o e-mail já existe.'
+          : 'Ocorreu um erro invulgar. Verifique os dados e tente novamente.'
+      );
     } else {
       setSuccess(true);
     }

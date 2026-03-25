@@ -214,6 +214,7 @@ export const AdminDashboard: React.FC = () => {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
           <input 
             type="text" placeholder="Buscar por nome, email, telefone, CNPJ..." 
+            maxLength={100}
             className="pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl w-full text-sm focus:ring-brand-500 focus:border-brand-500"
             value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -380,7 +381,7 @@ export const AdminDashboard: React.FC = () => {
                         <label className="text-xs font-bold text-slate-500 mb-1 flex items-center gap-1.5"><DollarSign size={12}/> Faturamento Fechado (Declared YTD)</label>
                         <div className="flex gap-2">
                            <input 
-                             type="number" defaultValue={(selectedProfile as any).declared_revenue || 0} 
+                             type="number" max="999999999" defaultValue={(selectedProfile as any).declared_revenue || 0} 
                              onBlur={(e)=>updateProfileFields(selectedProfile.id, 'declared_revenue', Number(e.target.value))}
                              className="flex-1 border bg-slate-50 rounded-lg px-3 py-2 text-sm focus:ring-brand-500" 
                            />
@@ -405,7 +406,7 @@ export const AdminDashboard: React.FC = () => {
                       <div className="pt-3 border-t border-slate-100">
                          <label className="text-xs font-bold text-slate-500 mb-1 block">Economia Tributária Real ($)</label>
                          <input 
-                           type="number" defaultValue={(selectedProfile as any).tax_savings || 0} 
+                           type="number" max="999999999" defaultValue={(selectedProfile as any).tax_savings || 0} 
                            onBlur={(e)=>updateProfileFields(selectedProfile.id, 'tax_savings', Number(e.target.value))}
                            className="w-full border bg-slate-50 rounded-lg px-3 py-2 text-sm" 
                          />

@@ -80,7 +80,7 @@ export const OnboardingModal: React.FC = () => {
                 <label className="block text-sm font-medium text-slate-700 mb-1">Documento ({docType}) *</label>
                 <div className="relative">
                   <FileText className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <input required type="text" value={docNumber} onChange={(e) => setDocNumber(e.target.value)} className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-xl focus:ring-brand-500 bg-slate-50" placeholder={docType === 'CNPJ' ? '00.000.000/0000-00' : '000.000.000-00'} />
+                  <input required type="text" maxLength={18} value={docNumber} onChange={(e) => setDocNumber(e.target.value)} className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-xl focus:ring-brand-500 bg-slate-50" placeholder={docType === 'CNPJ' ? '00.000.000/0000-00' : '000.000.000-00'} />
                 </div>
               </div>
 
@@ -88,7 +88,7 @@ export const OnboardingModal: React.FC = () => {
                 <label className="block text-sm font-medium text-slate-700 mb-1">Nome / Razão Social *</label>
                 <div className="relative">
                   <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <input required type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)} className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-xl focus:ring-brand-500 bg-slate-50" placeholder="Nome da sua empresa" />
+                  <input required type="text" maxLength={100} value={companyName} onChange={(e) => setCompanyName(e.target.value)} className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-xl focus:ring-brand-500 bg-slate-50" placeholder="Nome da sua empresa" />
                 </div>
               </div>
             </div>
@@ -98,7 +98,7 @@ export const OnboardingModal: React.FC = () => {
                 <label className="block text-sm font-medium text-slate-700 mb-1">Telemóvel / WhatsApp *</label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <input required type="text" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-xl focus:ring-brand-500 bg-slate-50" placeholder="(00) 00000-0000" />
+                  <input required type="tel" maxLength={15} value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))} className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-xl focus:ring-brand-500 bg-slate-50" placeholder="(00) 00000-0000" />
                 </div>
               </div>
 
