@@ -81,17 +81,19 @@ export const SavingsSimulator: React.FC = () => {
 
             <div className="mb-8">
               <div className="flex justify-between mb-4">
-                <label className="text-sm font-medium text-slate-600">Quanto você paga hoje (mensal)?</label>
+                <label htmlFor="currentFeeRange" className="text-sm font-medium text-slate-600">Quanto você paga hoje (mensal)?</label>
                 <span className="font-medium text-slate-900 text-lg">{formatCurrency(currentFee)}</span>
               </div>
               <input
+                id="currentFeeRange"
                 type="range"
                 min="150"
                 max="1500"
                 step="10"
                 value={currentFee}
                 onChange={(e) => setCurrentFee(Number(e.target.value))}
-                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-600 hover:accent-brand-700"
+                className="w-full cursor-pointer h-8"
+                title="Ajustar valor da mensalidade atual"
               />
               <div className="flex justify-between mt-2 text-xs text-slate-400">
                 <span>R$ 150</span>
