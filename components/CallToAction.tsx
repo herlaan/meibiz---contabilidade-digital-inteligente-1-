@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from './Button';
 import { TechDivider } from './TechDivider';
 
@@ -32,22 +33,26 @@ export const CallToAction: React.FC = () => {
         
         <div className="reveal delay-200 flex flex-col sm:flex-row gap-6 justify-center items-center">
           {/* Primary Action - Accent Color */}
-          <Button 
-            variant="primary"
-            size="lg" 
-            className="px-12 py-5 h-16 text-lg font-medium rounded-full min-w-[240px] shadow-[0_20px_50px_-12px_rgba(14,165,233,0.5)] hover:shadow-[0_20px_50px_-12px_rgba(14,165,233,0.7)] transition-all duration-300"
-          >
-            Abra sua empresa
-          </Button>
+          <Link to="/abrir-mei-gratis">
+            <Button 
+              variant="primary"
+              size="lg" 
+              className="px-12 py-5 h-16 text-lg font-medium rounded-full min-w-[240px] shadow-[0_20px_50px_-12px_rgba(14,165,233,0.5)] hover:shadow-[0_20px_50px_-12px_rgba(14,165,233,0.7)] transition-all duration-300"
+            >
+              Abra sua empresa
+            </Button>
+          </Link>
           
           {/* Secondary Action - Glassmorphism Outline */}
-          <Button 
-            variant="outline" 
-            size="lg" 
-            className="border-2 border-white/10 text-white bg-white/5 hover:bg-white/10 hover:border-white/30 px-12 py-5 h-16 text-lg font-medium rounded-full min-w-[240px] backdrop-blur-md transition-all duration-300"
-          >
-            Fale com um especialista
-          </Button>
+          <a href="https://wa.me/5575988927727" target="_blank" rel="noopener noreferrer">
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="border-2 border-white/10 text-white bg-white/5 hover:bg-white/10 hover:border-white/30 px-12 py-5 h-16 text-lg font-medium rounded-full min-w-[240px] backdrop-blur-md transition-all duration-300"
+            >
+              Fale com um especialista
+            </Button>
+          </a>
         </div>
       </div>
     </section>

@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { Button } from '../components/Button';
 import { 
-  Building2, FileText, MessageSquare, AlertCircle, TrendingUp, Phone, MapPin, 
+  Building2, FileText, MessageSquare, AlertCircle, Phone, MapPin, 
   Briefcase, DollarSign, X, Check, DownloadCloud, Loader2, Calendar, Upload, 
   Bell, ChevronRight, CheckCircle2, Shield, PlayCircle, Gift, ExternalLink, 
   UserCircle, LifeBuoy, CreditCard, ChevronDown, Clock, Activity, FileCheck
@@ -31,7 +31,17 @@ export const Dashboard: React.FC = () => {
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
   const [isNfModalOpen, setIsNfModalOpen] = useState(false);
   const [isSupportModalOpen, setIsSupportModalOpen] = useState(false);
-  const [showOnboardingTour, setShowOnboardingTour] = useState(true); // UX Tour
+  
+  // UX Tour (Onboarding) - Persistência no localStorage para aparecer apenas uma vez
+  const [showOnboardingTour, setShowOnboardingTour] = useState(() => {
+    return localStorage.getItem('meibiz_onboarding_seen') !== 'true';
+  });
+
+  const handleDismissTour = () => {
+    localStorage.setItem('meibiz_onboarding_seen', 'true');
+    setShowOnboardingTour(false);
+  };
+
   const [activeDocTab, setActiveDocTab] = useState<'todos' | 'impostos' | 'notas'>('todos'); // Pastas Premium
   const [isProfileFormOpen, setIsProfileFormOpen] = useState(false); // Collapsible
 
@@ -163,20 +173,6 @@ export const Dashboard: React.FC = () => {
     return score;
   };
   const completeness = calculateCompleteness();
-
-  // Termômetro do Limite MEI
-  const getEstimatedYTD = () => {
-    if (monthlyRevenue === 'Ate 5k') return 45000;
-    if (monthlyRevenue === '5k a 10k') return 75000;
-    if (monthlyRevenue === '10k a 20k') return 120000;
-    return 10000; // Default
-  };
-  const meiLimit = 81000;
-  const realAnnualRev = (profile as any)?.declared_revenue || 0; // Se houver um campo na DB, usar
-  const estimatedRev = realAnnualRev > 0 ? realAnnualRev : getEstimatedYTD();
-  const limitPercentage = Math.min((estimatedRev / meiLimit) * 100, 100);
-  const limitColor = limitPercentage > 90 ? 'bg-red-500' : limitPercentage > 75 ? 'bg-amber-500' : 'bg-green-500';
-
 
 
   // 3. Agenda Fiscal (Data de Pagamento DAS)
@@ -310,14 +306,14 @@ export const Dashboard: React.FC = () => {
               </p>
             </div>
           </div>
-          <Button variant="white" size="sm" className="relative z-10 shrink-0" onClick={() => setShowOnboardingTour(false)}>
+          <Button variant="white" size="sm" className="relative z-10 shrink-0" onClick={handleDismissTour}>
             Entendido, começar!
           </Button>
         </div>
       )}
 
-      {/* TOPO: Informações de Alto Nível (1, 9, 13) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* TOPO: Informações de Alto Nível */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         {/* 13. Gamificação do Perfil */}
         <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-6">
@@ -337,22 +333,6 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* 1. Termômetro do Limite MEI */}
-        <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2"><TrendingUp size={16} className="text-brand-500"/> Termômetro Limite MEI</h3>
-            <span className="text-xs font-bold text-slate-500">R$ 81k/ano</span>
-          </div>
-          <div className="w-full bg-slate-100 rounded-full h-2.5 mb-2 overflow-hidden">
-            <div className={`h-2.5 rounded-full transition-all duration-1000 ${limitColor}`} style={{ width: `${limitPercentage}%` }}></div>
-          </div>
-          <div className="flex justify-between text-xs">
-            <span className="text-slate-500">Est. YTD: <b className="text-slate-700">R$ {estimatedRev.toLocaleString()}</b></span>
-            <span className={limitPercentage > 90 ? 'text-red-600 font-bold' : 'text-slate-500'}>
-              {limitPercentage > 90 ? 'Atenção ao Limite!' : 'Seguro'}
-            </span>
-          </div>
-        </div>
 
         {/* 9. Card "Seu Contador" + 18. SLA de Tempo */}
         <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4 relative overflow-hidden group">
@@ -398,115 +378,188 @@ export const Dashboard: React.FC = () => {
           </div>
 
           {/* 5, 3, 6, 11 - Ações Rápidas (Painel de Controlo) */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <button onClick={() => !isFreePlan ? setIsNfModalOpen(true) : handleUpgradeIntent()} className={`p-4 rounded-2xl border transition-all flex flex-col items-center justify-center text-center group ${isFreePlan ? 'bg-slate-50 border-slate-200 opacity-80 cursor-not-allowed' : 'bg-white border-brand-100 hover:border-brand-400 hover:shadow-md hover:shadow-brand-500/10'}`}>
-               <div className={`p-3 rounded-[1rem] mb-3 transition-transform group-hover:-translate-y-1 ${isFreePlan ? 'bg-slate-200 text-slate-500' : 'bg-brand-50 text-brand-600'}`}>
-                 <FileText size={20} />
-               </div>
-               <span className="text-sm font-bold text-slate-800">Emitir Nota</span>
-               {isFreePlan && <span className="text-[10px] text-amber-600 font-medium mt-1 flex items-center gap-1"><AlertCircle size={10}/> Plano Premium</span>}
-            </button>
-            
-            <button onClick={handleDownloadDAS} className="bg-white border border-brand-100 hover:border-brand-400 p-4 rounded-2xl shadow-sm hover:shadow-md hover:shadow-brand-500/10 transition-all flex flex-col items-center justify-center text-center group">
-               <div className="p-3 bg-brand-50 text-brand-600 rounded-[1rem] mb-3 transition-transform group-hover:-translate-y-1">
-                 <DownloadCloud size={20} />
-               </div>
-               <span className="text-sm font-bold text-slate-800 leading-tight">Baixar DAS<br/>do Mês</span>
-            </button>
-
-            <button onClick={() => fileInputRef.current?.click()} className="bg-white border border-brand-100 hover:border-brand-400 p-4 rounded-2xl shadow-sm hover:shadow-md hover:shadow-brand-500/10 transition-all flex flex-col items-center justify-center text-center group">
-               <div className="p-3 bg-brand-50 text-brand-600 rounded-[1rem] mb-3 transition-transform group-hover:-translate-y-1">
-                 <Upload size={20} />
-               </div>
-               <span className="text-sm font-bold text-slate-800 leading-tight">Enviar<br/>Documento</span>
-            </button>
+          <div className="relative">
+            <div className={`grid grid-cols-2 lg:grid-cols-4 gap-4 ${isFreePlan ? 'pointer-events-none select-none' : ''}`}>
+              <button className="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex flex-col items-center justify-center text-center">
+                 <div className="p-3 bg-slate-200 text-slate-400 rounded-[1rem] mb-3"><FileText size={20} /></div>
+                 <span className="text-sm font-bold text-slate-400">Emitir Nota</span>
+              </button>
+              <button className="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex flex-col items-center justify-center text-center">
+                 <div className="p-3 bg-slate-200 text-slate-400 rounded-[1rem] mb-3"><DownloadCloud size={20} /></div>
+                 <span className="text-sm font-bold text-slate-400 leading-tight">Baixar DAS<br/>do Mês</span>
+              </button>
+              <button className="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex flex-col items-center justify-center text-center">
+                 <div className="p-3 bg-slate-200 text-slate-400 rounded-[1rem] mb-3"><Upload size={20} /></div>
+                 <span className="text-sm font-bold text-slate-400 leading-tight">Enviar<br/>Documento</span>
+              </button>
+              <button className="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex flex-col items-center justify-center text-center">
+                 <div className="p-3 bg-slate-200 text-slate-400 rounded-[1rem] mb-3"><LifeBuoy size={20} /></div>
+                 <span className="text-sm font-bold text-slate-400 leading-tight">Abrir<br/>Chamado</span>
+              </button>
+            </div>
             <input type="file" ref={fileInputRef} className="hidden" onChange={handleUploadDocument} />
 
-            <button onClick={() => setIsSupportModalOpen(true)} className="bg-white border border-brand-100 hover:border-brand-400 p-4 rounded-2xl shadow-sm hover:shadow-md hover:shadow-brand-500/10 transition-all flex flex-col items-center justify-center text-center group">
-               <div className="p-3 bg-brand-50 text-brand-600 rounded-[1rem] mb-3 transition-transform group-hover:-translate-y-1">
-                 <LifeBuoy size={20} />
-               </div>
-               <span className="text-sm font-bold text-slate-800 leading-tight">Abrir<br/>Chamado</span>
-            </button>
+            {/* Overlay de bloqueio - Plano Grátis */}
+            {isFreePlan && (
+              <div className="absolute inset-0 bg-white/80 backdrop-blur-[2px] rounded-2xl flex flex-col items-center justify-center gap-3 border border-amber-200 z-10">
+                <div className="w-12 h-12 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center">
+                  <Shield size={22} className="text-amber-500" />
+                </div>
+                <div className="text-center px-4">
+                  <p className="text-sm font-bold text-slate-800">Serviços bloqueados</p>
+                  <p className="text-xs text-slate-500 mt-1">Ações contábeis disponíveis a partir do <strong>MEI START R$89/mês</strong></p>
+                </div>
+                <Button variant="primary" size="sm" onClick={handleUpgradeIntent}>Desbloquear Agora</Button>
+              </div>
+            )}
+
+            {/* Botões reais (visíveis apenas para planos pagos) */}
+            {!isFreePlan && (
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-0" style={{marginTop: '-100%', position: 'relative', zIndex: 5}}>
+                <button onClick={() => setIsNfModalOpen(true)} className="bg-white border border-brand-100 hover:border-brand-400 p-4 rounded-2xl shadow-sm hover:shadow-md hover:shadow-brand-500/10 transition-all flex flex-col items-center justify-center text-center group">
+                   <div className="p-3 bg-brand-50 text-brand-600 rounded-[1rem] mb-3 transition-transform group-hover:-translate-y-1"><FileText size={20} /></div>
+                   <span className="text-sm font-bold text-slate-800">Emitir Nota</span>
+                </button>
+                <button onClick={handleDownloadDAS} className="bg-white border border-brand-100 hover:border-brand-400 p-4 rounded-2xl shadow-sm hover:shadow-md hover:shadow-brand-500/10 transition-all flex flex-col items-center justify-center text-center group">
+                   <div className="p-3 bg-brand-50 text-brand-600 rounded-[1rem] mb-3 transition-transform group-hover:-translate-y-1"><DownloadCloud size={20} /></div>
+                   <span className="text-sm font-bold text-slate-800 leading-tight">Baixar DAS<br/>do Mês</span>
+                </button>
+                <button onClick={() => fileInputRef.current?.click()} className="bg-white border border-brand-100 hover:border-brand-400 p-4 rounded-2xl shadow-sm hover:shadow-md hover:shadow-brand-500/10 transition-all flex flex-col items-center justify-center text-center group">
+                   <div className="p-3 bg-brand-50 text-brand-600 rounded-[1rem] mb-3 transition-transform group-hover:-translate-y-1"><Upload size={20} /></div>
+                   <span className="text-sm font-bold text-slate-800 leading-tight">Enviar<br/>Documento</span>
+                </button>
+                <button onClick={() => setIsSupportModalOpen(true)} className="bg-white border border-brand-100 hover:border-brand-400 p-4 rounded-2xl shadow-sm hover:shadow-md hover:shadow-brand-500/10 transition-all flex flex-col items-center justify-center text-center group">
+                   <div className="p-3 bg-brand-50 text-brand-600 rounded-[1rem] mb-3 transition-transform group-hover:-translate-y-1"><LifeBuoy size={20} /></div>
+                   <span className="text-sm font-bold text-slate-800 leading-tight">Abrir<br/>Chamado</span>
+                </button>
+              </div>
+            )}
           </div>
 
 
-          {/* 17. Cofre de Documentos Otimizado por Pastas */}
-          <div className="bg-white rounded-3xl p-6 md:p-8 border border-slate-100 shadow-sm">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="font-bold text-slate-900">Cofre Digital</h3>
+          {/* 17. Cofre de Documentos */}
+          <div className="relative bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+            {/* Conteúdo do cofre (SEMPRE renderizado) */}
+            <div className={`p-6 md:p-8 ${isFreePlan ? 'opacity-30 pointer-events-none select-none' : ''}`}>
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="font-bold text-slate-900">Cofre Digital</h3>
+              </div>
+              <div className="flex gap-2 mb-6 border-b border-slate-100 pb-2">
+                {['todos', 'impostos', 'notas'].map((t) => (
+                  <button key={t} className={`px-4 py-1.5 rounded-full text-xs font-bold capitalize ${t === 'todos' ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-500'}`}>{t}</button>
+                ))}
+              </div>
+              <div className="flex flex-col items-center justify-center gap-3 p-8 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                <FileText size={32} className="text-slate-300" />
+                <p className="text-sm text-slate-500">Seus documentos contábeis aparecerão aqui.</p>
+              </div>
             </div>
 
-            {/* Tabs */}
-            <div className="flex gap-2 mb-6 border-b border-slate-100 pb-2 overflow-x-auto custom-scrollbar">
-              {['todos', 'impostos', 'notas'].map((t) => (
-                <button 
-                  key={t}
-                  onClick={() => setActiveDocTab(t as any)}
-                  className={`px-4 py-1.5 rounded-full text-xs font-bold capitalize transition-all ${activeDocTab === t ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-500 hover:bg-slate-100'}`}
-                >
-                  {t}
-                </button>
-              ))}
-            </div>
-
-            <div className="space-y-3 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
-              {loadingDocs ? (
-                <div className="flex items-center justify-center p-8 text-slate-400"><Loader2 size={24} className="animate-spin" /></div>
-              ) : filteredDocs.length === 0 ? (
-                <div className="flex flex-col items-center justify-center gap-3 p-8 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200">
-                  <FileText size={32} className="text-slate-300" />
-                  <p className="text-sm text-slate-500 max-w-xs">Ainda não existem documentos nesta categoria do seu cofre.</p>
+            {/* Overlay bloqueio para plano grátis */}
+            {isFreePlan && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 bg-white/60 backdrop-blur-[3px]">
+                <div className="w-14 h-14 rounded-2xl bg-slate-900 flex items-center justify-center shadow-xl">
+                  <FileCheck size={26} className="text-brand-400" />
                 </div>
-              ) : (
-                filteredDocs.map((doc, index) => (
-                  <div key={index} className="flex flex-col gap-2 p-3 bg-white hover:bg-slate-50 rounded-xl border border-slate-100 transition-colors group">
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center gap-3 overflow-hidden">
-                        <div className="p-2.5 bg-brand-50 text-brand-600 rounded-lg shrink-0"><FileText size={16} /></div>
-                        <div className="min-w-0">
-                          <p className="text-sm font-medium text-slate-800 truncate">{doc.name}</p>
-                          <p className="text-xs text-slate-400 mt-0.5">Adicionado em {new Date(doc.created_at).toLocaleDateString('pt-BR')}</p>
+                <div className="text-center">
+                  <p className="font-bold text-slate-900 mb-1">Cofre Digital Bloqueado</p>
+                  <p className="text-xs text-slate-500 max-w-xs">Receba seus documentos fiscais, DAS, notas e relatórios organizados na nuvem. Disponível a partir do <strong>MEI START</strong>.</p>
+                </div>
+                <Button variant="primary" size="sm" onClick={handleUpgradeIntent}>Desbloquear Cofre</Button>
+              </div>
+            )}
+
+            {/* Conteúdo real para planos pagos */}
+            {!isFreePlan && (
+              <div className="px-6 md:px-8 pb-6 md:pb-8 -mt-8">
+                <div className="flex gap-2 mb-6 border-b border-slate-100 pb-2 overflow-x-auto">
+                  {['todos', 'impostos', 'notas'].map((t) => (
+                    <button
+                      key={t}
+                      onClick={() => setActiveDocTab(t as any)}
+                      className={`px-4 py-1.5 rounded-full text-xs font-bold capitalize transition-all ${activeDocTab === t ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-500 hover:bg-slate-100'}`}
+                    >{t}</button>
+                  ))}
+                </div>
+                <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
+                  {loadingDocs ? (
+                    <div className="flex items-center justify-center p-8 text-slate-400"><Loader2 size={24} className="animate-spin" /></div>
+                  ) : filteredDocs.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center gap-3 p-8 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                      <FileText size={32} className="text-slate-300" />
+                      <p className="text-sm text-slate-500 max-w-xs">Ainda não existem documentos nesta categoria.</p>
+                    </div>
+                  ) : (
+                    filteredDocs.map((doc, index) => (
+                      <div key={index} className="flex justify-between items-center p-3 bg-white hover:bg-slate-50 rounded-xl border border-slate-100 transition-colors">
+                        <div className="flex items-center gap-3 overflow-hidden">
+                          <div className="p-2.5 bg-brand-50 text-brand-600 rounded-lg shrink-0"><FileText size={16} /></div>
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium text-slate-800 truncate">{doc.name}</p>
+                            <p className="text-xs text-slate-400 mt-0.5">Adicionado em {new Date(doc.created_at).toLocaleDateString('pt-BR')}</p>
+                          </div>
+                        </div>
+                        <button onClick={() => downloadDocument(doc.name)} className="p-2 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors"><DownloadCloud size={18} /></button>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* 18. Chamados de Atendimento */}
+          <div className="relative bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden mb-6">
+            <div className={`p-6 md:p-8 ${isFreePlan ? 'opacity-30 pointer-events-none select-none' : ''}`}>
+              <h3 className="font-bold text-slate-900 flex items-center gap-2 mb-2"><MessageSquare size={18} className="text-brand-500"/> Meus Chamados de Atendimento</h3>
+              <p className="text-xs text-slate-500 mb-6 flex items-center gap-1.5 bg-slate-50 border border-slate-200 p-2 rounded-lg w-fit"><Clock size={14} className="text-brand-500"/> Prazo de resposta: <strong className="text-slate-700">até 4 horas úteis</strong>.</p>
+              <div className="p-6 text-center text-slate-400 bg-slate-50 rounded-2xl border border-dashed border-slate-200">Nenhum chamado aberto.</div>
+            </div>
+
+            {/* Overlay bloqueio */}
+            {isFreePlan && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 bg-white/60 backdrop-blur-[3px]">
+                <div className="w-14 h-14 rounded-2xl bg-slate-900 flex items-center justify-center shadow-xl">
+                  <MessageSquare size={26} className="text-brand-400" />
+                </div>
+                <div className="text-center">
+                  <p className="font-bold text-slate-900 mb-1">Atendimento Bloqueado</p>
+                  <p className="text-xs text-slate-500 max-w-xs">Abra chamados, receba suporte especializado e fale com sua equipa contábil. Disponível a partir do <strong>MEI START</strong>.</p>
+                </div>
+                <Button variant="primary" size="sm" onClick={handleUpgradeIntent}>Ativar Atendimento</Button>
+              </div>
+            )}
+
+            {/* Chamados reais para planos pagos */}
+            {!isFreePlan && (
+              <div className="px-6 md:px-8 pb-6 md:pb-8 -mt-8">
+                <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
+                  {myTickets.length === 0 ? (
+                    <div className="p-6 text-center text-slate-400 bg-slate-50 rounded-2xl border border-dashed border-slate-200">Você ainda não possui chamados abertos.</div>
+                  ) : (
+                    myTickets.map(t => (
+                      <div key={t.id} className="p-4 border border-slate-100 rounded-2xl flex flex-col md:flex-row gap-4 items-start md:items-center justify-between bg-white hover:bg-slate-50/50 transition-colors">
+                        <div className="flex gap-4 items-center">
+                          <div className={`p-2.5 rounded-xl shrink-0 ${t.type === 'nf_emission' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'}`}>
+                            {t.type === 'nf_emission' ? <FileText size={18}/> : <MessageSquare size={18}/>}
+                          </div>
+                          <div>
+                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">{new Date(t.created_at).toLocaleDateString('pt-BR')} às {new Date(t.created_at).toLocaleTimeString('pt-BR').slice(0,5)}</p>
+                            <h4 className="text-sm font-bold text-slate-800">{t.type === 'nf_emission' ? 'Emissão de NF' : 'Suporte Financeiro / Dúvida'}</h4>
+                            <p className="text-xs text-slate-500 line-clamp-1 mt-1 max-w-sm">{t.type === 'nf_emission' ? `Cliente: ${t.details.client_document} | R$ ${t.details.value}` : t.details.description}</p>
+                          </div>
+                        </div>
+                        <div className="shrink-0">
+                          <span className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap border ${t.status === 'completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : t.status === 'in_progress' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-slate-50 text-slate-600 border-slate-200'}`}>
+                            {t.status === 'completed' ? 'Concluído' : t.status === 'in_progress' ? 'Em Andamento' : 'Pendente'}
+                          </span>
                         </div>
                       </div>
-                      <button onClick={() => downloadDocument(doc.name)} className="p-2 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors"><DownloadCloud size={18} /></button>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-
-          {/* 18. Quadro de Chamados e Solicitações */}
-          <div className="bg-white rounded-3xl p-6 md:p-8 border border-slate-100 shadow-sm mb-6">
-            <h3 className="font-bold text-slate-900 flex items-center gap-2 mb-2"><MessageSquare size={18} className="text-brand-500"/> Meus Chamados de Atendimento</h3>
-            <p className="text-xs text-slate-500 mb-6 flex items-center gap-1.5 bg-slate-50 border border-slate-200 p-2 rounded-lg w-fit"><Clock size={14} className="text-brand-500"/> Prazo máximo de resposta da nossa equipa: <strong className="text-slate-700">até 4 horas úteis</strong>.</p>
-            
-            <div className="space-y-3 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
-               {myTickets.length === 0 ? (
-                  <div className="p-6 text-center text-slate-400 bg-slate-50 rounded-2xl border border-dashed border-slate-200">Você ainda não possui chamados abertos.</div>
-               ) : (
-                  myTickets.map(t => (
-                    <div key={t.id} className="p-4 border border-slate-100 rounded-2xl flex flex-col md:flex-row gap-4 items-start md:items-center justify-between bg-white hover:bg-slate-50/50 transition-colors">
-                       <div className="flex gap-4 items-center">
-                         <div className={`p-2.5 rounded-xl shrink-0 ${t.type === 'nf_emission' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'}`}>
-                           {t.type === 'nf_emission' ? <FileText size={18}/> : <MessageSquare size={18}/>}
-                         </div>
-                         <div>
-                           <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">{new Date(t.created_at).toLocaleDateString('pt-BR')} às {new Date(t.created_at).toLocaleTimeString('pt-BR').slice(0,5)}</p>
-                           <h4 className="text-sm font-bold text-slate-800">{t.type === 'nf_emission' ? 'Emissão de NF' : 'Suporte Financeiro / Dúvida'}</h4>
-                           <p className="text-xs text-slate-500 line-clamp-1 mt-1 max-w-sm">{t.type === 'nf_emission' ? `Cliente: ${t.details.client_document} | R$ ${t.details.value}` : t.details.description}</p>
-                         </div>
-                       </div>
-                       <div className="shrink-0 flex self-end md:self-auto">
-                         <span className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap border ${t.status === 'completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : t.status === 'in_progress' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-slate-50 text-slate-600 border-slate-200'}`}>
-                           {t.status === 'completed' ? 'Concluído' : t.status === 'in_progress' ? 'Em Andamento' : 'Pendente (Aguardando)'}
-                         </span>
-                       </div>
-                    </div>
-                  ))
-               )}
-            </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Acordeão do Perfil (Formulário Antigo Recolhível) */}

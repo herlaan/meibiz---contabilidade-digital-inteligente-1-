@@ -68,10 +68,13 @@ export const AdminDashboard: React.FC = () => {
 
   // 1. Mudança de Plano
   const changePlan = async (id: string, newPlan: string) => {
-    const { error } = await supabase.from('profiles').update({ plan_type: newPlan }).eq('id', id);
-    if (!error) {
+    const { error, data } = await supabase.from('profiles').update({ plan_type: newPlan }).eq('id', id).select();
+    if (!error && data && data.length > 0) {
       setProfiles(profiles.map(p => p.id === id ? { ...p, plan_type: newPlan } : p));
-    } else alert("Erro ao alterar o plano: " + error.message);
+      alert("Plano alterado com sucesso!");
+    } else {
+      alert("Erro ao alterar o plano: " + (error?.message || "Sem permissão ou registro não encontrado no banco."));
+    }
   };
 
   // 2. Fetch User Docs (Cofre)
@@ -117,16 +120,17 @@ export const AdminDashboard: React.FC = () => {
   };
 
   const updateReqStatus = async (id: string, status: string) => {
-    const { error } = await supabase.from('service_requests').update({ status }).eq('id', id);
-    if (!error) {
+    const { error, data } = await supabase.from('service_requests').update({ status }).eq('id', id).select();
+    if (!error && data && data.length > 0) {
        if (status === 'completed' && !showCompletedReqs) {
            // Arquivar imediatamente da vista
            setRequests(requests.filter(r => r.id !== id));
        } else {
            setRequests(requests.map(r => r.id === id ? { ...r, status } : r));
        }
+    } else {
+       alert("Erro ao atualizar: " + (error?.message || "Sem permissão RLS ou registro não encontrado."));
     }
-    else alert("Erro ao atualizar.");
   };
 
   const updateProfileFields = async (id: string, field: string, value: any) => {

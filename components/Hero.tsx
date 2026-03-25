@@ -65,9 +65,11 @@ export const Hero: React.FC = () => {
                   Abra sua empresa grátis
                 </Button>
               </Link>
-              <Button variant="outline" size="lg" className="h-16 px-10 text-lg border-white/10 text-white hover:bg-white/5 backdrop-blur-sm">
-                Fale com um contador
-              </Button>
+              <a href="https://wa.me/5575988927727" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+                <Button variant="outline" size="lg" className="h-16 px-10 text-lg border-white/10 text-white hover:bg-white/5 backdrop-blur-sm w-full">
+                  Fale com um contador
+                </Button>
+              </a>
             </div>
 
             {/* Prova Social (Avatares) */}

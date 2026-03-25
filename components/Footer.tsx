@@ -16,10 +16,10 @@ export const Footer: React.FC = () => {
               A maior plataforma de contabilidade online do Brasil para micro e pequenas empresas. Simplificamos sua rotina para você focar no crescimento.
             </p>
             <div className="flex space-x-4 mb-8">
-              <a href="#" className="p-2 bg-slate-100 rounded-full hover:bg-brand-50 hover:text-brand-600 transition-colors"><Instagram size={18} /></a>
-              <a href="#" className="p-2 bg-slate-100 rounded-full hover:bg-brand-50 hover:text-brand-600 transition-colors"><Linkedin size={18} /></a>
-              <a href="#" className="p-2 bg-slate-100 rounded-full hover:bg-brand-50 hover:text-brand-600 transition-colors"><Facebook size={18} /></a>
-              <a href="#" className="p-2 bg-slate-100 rounded-full hover:bg-brand-50 hover:text-brand-600 transition-colors"><Twitter size={18} /></a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="p-2 bg-slate-100 rounded-full hover:bg-brand-50 hover:text-brand-600 transition-colors"><Instagram size={18} /></a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="p-2 bg-slate-100 rounded-full hover:bg-brand-50 hover:text-brand-600 transition-colors"><Linkedin size={18} /></a>
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="p-2 bg-slate-100 rounded-full hover:bg-brand-50 hover:text-brand-600 transition-colors"><Facebook size={18} /></a>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="p-2 bg-slate-100 rounded-full hover:bg-brand-50 hover:text-brand-600 transition-colors"><Twitter size={18} /></a>
             </div>
             
             <div className="flex items-center gap-4 text-xs font-medium text-slate-400">
@@ -41,10 +41,10 @@ export const Footer: React.FC = () => {
           <div>
             <h4 className="text-slate-900 font-medium mb-4">Serviços</h4>
             <ul className="space-y-3 text-sm">
-              <li><a href="#" className="hover:text-brand-600 transition-colors">Abrir Empresa Grátis</a></li>
-              <li><a href="#" className="hover:text-brand-600 transition-colors">Migrar Contabilidade</a></li>
-              <li><a href="#" className="hover:text-brand-600 transition-colors">Certificado Digital</a></li>
-              <li><a href="#" className="hover:text-brand-600 transition-colors">Calculadora de Impostos</a></li>
+              <li><Link to="/abrir-mei-gratis" className="hover:text-brand-600 transition-colors">Abrir Empresa Grátis</Link></li>
+              <li><Link to="/trocar-de-contador" className="hover:text-brand-600 transition-colors">Migrar Contabilidade</Link></li>
+              <li><Link to="/contabilidade-completa" className="hover:text-brand-600 transition-colors">Contabilidade Completa</Link></li>
+              <li><Link to="/calculadora-custo-abertura" className="hover:text-brand-600 transition-colors">Calculadora de Impostos</Link></li>
             </ul>
           </div>
 
@@ -54,7 +54,7 @@ export const Footer: React.FC = () => {
               <li><a href="#" className="hover:text-brand-600 transition-colors">Blog MeiBiz</a></li>
               <li><a href="#" className="hover:text-brand-600 transition-colors">Materiais Ricos</a></li>
               <li><a href="#" className="hover:text-brand-600 transition-colors">Central de Ajuda</a></li>
-              <li><a href="#" className="hover:text-brand-600 transition-colors">Glossário Contábil</a></li>
+              <li><Link to="/calculadora-pj-clt" className="hover:text-brand-600 transition-colors">Calculadora PJ x CLT</Link></li>
             </ul>
           </div>
         </div>

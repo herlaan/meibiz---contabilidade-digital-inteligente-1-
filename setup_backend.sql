@@ -37,8 +37,22 @@ DROP POLICY IF EXISTS "Administradores podem ler/escrever tudo" ON public.servic
 CREATE POLICY "Administradores podem ler/escrever tudo"
 ON public.service_requests 
 FOR ALL 
-USING ( (SELECT role FROM public.profiles WHERE id = auth.uid() LIMIT 1) = 'admin' )
-WITH CHECK ( (SELECT role FROM public.profiles WHERE id = auth.uid() LIMIT 1) = 'admin' );
+USING ( (SELECT is_admin FROM public.profiles WHERE id = auth.uid() LIMIT 1) = true )
+WITH CHECK ( (SELECT is_admin FROM public.profiles WHERE id = auth.uid() LIMIT 1) = true );
+
+-- 1.1 Trigger para atualizar o campo updated_at automaticamente
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+CREATE TRIGGER update_service_requests_updated_at
+BEFORE UPDATE ON public.service_requests
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
 
 -- 2. Atualização da tabela Profiles para suportar Status da DASN e Variáveis Dinâmicas
 -- Adicionando as colunas caso não existam
@@ -76,9 +90,10 @@ USING (
 CREATE OR REPLACE FUNCTION public.protect_critical_columns()
 RETURNS trigger AS $$
 BEGIN
-  -- Se quem está a fazer UPDATE for o front-end comum (anon/authenticated), congela estes campos
-  IF current_setting('request.jwt.claims', true)::json->>'role' != 'service_role' THEN
-      NEW.role = OLD.role;
+  -- Se NÃO for um administrador E NÃO for o sistema (service_role), bloqueia edição de campos sensíveis
+  IF NOT EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND is_admin = true) 
+     AND current_setting('request.jwt.claims', true)::json->>'role' != 'service_role' THEN
+      NEW.is_admin = OLD.is_admin;
       NEW.plan_type = OLD.plan_type;
       NEW.dasn_status = OLD.dasn_status;
       NEW.tax_savings = OLD.tax_savings;
