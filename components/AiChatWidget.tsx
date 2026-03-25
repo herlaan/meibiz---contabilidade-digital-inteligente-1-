@@ -72,7 +72,7 @@ export const AiChatWidget: React.FC = () => {
             const errorMsg: Message = {
                 id: (Date.now() + 1).toString(),
                 type: 'bot',
-                content: 'Desculpe, estou com problemas de conexão. Mas pode abrir um ticket no menu ao lado para escalar seu pedido à equipa humana!',
+                content: 'Desculpe, estou com alguma instabilidade na minha rede neural no momento. Se precisar de urgência, entre em contato através dos nossos canais oficiais!',
                 timestamp: new Date()
             };
             setMessages(prev => [...prev, errorMsg]);
