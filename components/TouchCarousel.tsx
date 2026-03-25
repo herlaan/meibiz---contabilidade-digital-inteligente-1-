@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 
 interface TouchCarouselProps {
   children: React.ReactNode;
@@ -10,22 +10,19 @@ interface TouchCarouselProps {
  * TouchCarousel
  * Wrapper para carrosséis com animação CSS marquee.
  * - No desktop: comportamento padrão (hover pausa).
- * - No mobile: toque pausa a animação e permite arrastar manualmente com o dedo.
+ * - No mobile: toque pausa a animação e permite arrastar com fluido nativo.
  *   Ao soltar, a animação retoma após 2s de inatividade.
- *   Scrolling é ultra-suave, sem travamentos (sem snap).
+ *   Utiliza a suavidade nativa do sistema (momentum scrolling).
  */
 export const TouchCarousel: React.FC<TouchCarouselProps> = ({
   children,
   className = '',
   innerClassName,
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
   const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Posição do toque inicial e posição de scroll inicial
-  const touchStartX = useRef(0);
-  const scrollStartX = useRef(0);
 
   const pauseAnimation = useCallback(() => {
     if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
@@ -39,16 +36,8 @@ export const TouchCarousel: React.FC<TouchCarouselProps> = ({
     }, 2000);
   }, []);
 
-  const handleTouchStart = (e: React.TouchEvent) => {
+  const handleTouchStart = () => {
     pauseAnimation();
-    touchStartX.current = e.touches[0].clientX;
-    scrollStartX.current = trackRef.current?.parentElement?.scrollLeft ?? 0;
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!trackRef.current?.parentElement) return;
-    const delta = touchStartX.current - e.touches[0].clientX;
-    trackRef.current.parentElement.scrollLeft = scrollStartX.current + delta;
   };
 
   const handleTouchEnd = () => {
@@ -57,15 +46,15 @@ export const TouchCarousel: React.FC<TouchCarouselProps> = ({
 
   return (
     <div
+      ref={containerRef}
       className={`overflow-x-auto scrollbar-hide ${className}`}
       style={{
         WebkitOverflowScrolling: 'touch',
-        scrollBehavior: 'smooth',
         msOverflowStyle: 'none',
         scrollbarWidth: 'none',
+        scrollBehavior: 'smooth',
       }}
       onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
       <div
