@@ -82,7 +82,7 @@ export const AdditionalSolutions: React.FC = () => {
                     <h3 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h3>
                     <p className="text-slate-500 text-sm leading-relaxed mb-6 flex-grow">{item.desc}</p>
                     <button 
-                      onClick={() => window.open(`https://wa.me/5575988927727?text=${encodeURIComponent(`Olá! Gostaria de saber mais detalhes sobre o serviço: ${item.title}`)}`, '_blank')}
+                      onClick={() => window.open(`https://wa.me/5511914928772?text=${encodeURIComponent(`Olá! Gostaria de saber mais detalhes sobre o serviço: ${item.title}`)}`, '_blank')}
                       className="flex items-center text-slate-900 font-bold hover:text-brand-600 transition-colors text-sm w-full"
                     >
                       Ver detalhes <ChevronRight size={16} className="ml-auto" />
@@ -117,7 +117,7 @@ export const AdditionalSolutions: React.FC = () => {
               </p>
               
               <button 
-                onClick={() => window.open(`https://wa.me/5575988927727?text=${encodeURIComponent(`Olá! Gostaria de saber mais detalhes sobre o serviço: ${item.title}`)}`, '_blank')}
+                onClick={() => window.open(`https://wa.me/5511914928772?text=${encodeURIComponent(`Olá! Gostaria de saber mais detalhes sobre o serviço: ${item.title}`)}`, '_blank')}
                 className="flex items-center text-slate-900 font-bold hover:text-brand-600 group-hover:gap-2 transition-all text-sm"
               >
                 Ver detalhes <ArrowRight size={16} className="ml-2 text-slate-400 group-hover:text-brand-600" />

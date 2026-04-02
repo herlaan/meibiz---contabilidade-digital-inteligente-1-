@@ -24,7 +24,7 @@ export const ProtectedService: React.FC<ProtectedServiceProps> = ({
     whatsappMessage
 }) => {
     const handleWhatsAppClick = () => {
-        const phone = "5575988927727";
+        const phone = "5511914928772";
         const encodedMessage = encodeURIComponent(whatsappMessage);
         window.open(`https://wa.me/${phone}?text=${encodedMessage}`, '_blank');
     };

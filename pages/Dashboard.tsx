@@ -12,7 +12,7 @@ import {
 /* Structural refresh to prevent Vite 500 crashes */
 
 // NÚMERO DE ATENDIMENTO DA CONTABILIDADE
-const WHATSAPP_NUMBER = '5575988927727'; 
+const WHATSAPP_NUMBER = '5511914928772';
 
 export const Dashboard: React.FC = () => {
   const { user, profile, refreshProfile } = useAuth();

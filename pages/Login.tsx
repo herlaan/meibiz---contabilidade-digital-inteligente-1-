@@ -36,7 +36,7 @@ export const Login: React.FC = () => {
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-3xl shadow-xl border border-slate-100">
         <div className="flex flex-col items-center">
           <Link to="/" className="mb-6 hover:opacity-80 transition-opacity">
-            <img src="/logos/logo-blue.png" alt="MeiBiz Logo" className="h-12 md:h-16 w-auto object-contain" />
+            <img src="/logos/logo-blue.png?v=2" alt="MeiBiz Logo" className="h-12 md:h-16 w-auto object-contain" />
           </Link>
           <h2 className="text-center text-3xl font-extrabold text-slate-900">
             Acesse sua conta

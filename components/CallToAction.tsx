@@ -44,7 +44,7 @@ export const CallToAction: React.FC = () => {
           </Link>
           
           {/* Secondary Action - Glassmorphism Outline */}
-          <a href="https://wa.me/5575988927727" target="_blank" rel="noopener noreferrer">
+          <a href="https://wa.me/5511914928772" target="_blank" rel="noopener noreferrer">
             <Button 
               variant="outline" 
               size="lg" 

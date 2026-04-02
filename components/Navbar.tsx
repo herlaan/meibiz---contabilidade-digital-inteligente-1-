@@ -139,7 +139,7 @@ export const Navbar: React.FC = () => {
           {/* Logo */}
           <Link to="/" className="flex-shrink-0 flex items-center gap-2 cursor-pointer">
             <img 
-              src={isActuallyScrolled ? "/logos/logo-blue.png" : "/logos/logo-white.png"} 
+              src={isActuallyScrolled ? "/logos/logo-blue.png?v=2" : "/logos/logo-white.png?v=2"} 
               alt="MeiBiz" 
               className="h-10 md:h-12 w-auto object-contain transition-all duration-300"
             />

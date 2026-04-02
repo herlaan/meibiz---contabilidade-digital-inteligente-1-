@@ -166,6 +166,50 @@ export const AdminDashboard: React.FC = () => {
     return <span className={`px-2.5 py-1 text-xs font-semibold rounded-full border ${p.class}`}>{p.label}</span>;
   };
 
+  const exportToCSV = () => {
+    if (filteredProfiles.length === 0) {
+      alert("Nenhum cliente para exportar no filtro atual.");
+      return;
+    }
+
+    const headers = [
+      "Data Adesao",
+      "Nome",
+      "Email",
+      "Telefone",
+      "Empresa",
+      "Tipo Documento",
+      "Documento (C/CPF)",
+      "Plano Ativo",
+      "Faturamento Declarado",
+      "Status DASN",
+      "Economia"
+    ];
+
+    const rows = filteredProfiles.map(p => [
+      `"${new Date(p.created_at).toLocaleDateString('pt-BR')}"`,
+      `"${p.full_name || ''}"`,
+      `"${p.email || ''}"`,
+      `"${p.phone || ''}"`,
+      `"${p.company_name || ''}"`,
+      `"${p.document_type || ''}"`,
+      `"${p.document_number || ''}"`,
+      `"${p.plan_type || 'gratis'}"`,
+      `"${(p as any).declared_revenue || 0}"`,
+      `"${(p as any).dasn_status || 'pending'}"`,
+      `"${(p as any).tax_savings || 0}"`
+    ]);
+
+    const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + [headers.join(";"), ...rows.map(e => e.join(";"))].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `clientes_meibiz_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-8 pb-20">
       
@@ -225,7 +269,10 @@ export const AdminDashboard: React.FC = () => {
       </div>
 
       {/* FERRAMENTAS & FILTROS C.R.M. */}
-      <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2 mt-8"><Users className="text-brand-500"/> Diretório de Clientes</h2>
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between mt-8 gap-4 mb-2">
+        <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2"><Users className="text-brand-500"/> Diretório de Clientes</h2>
+        <Button variant="outline" size="sm" onClick={exportToCSV} className="flex items-center gap-2 shrink-0 border-slate-200 shadow-sm"><Download size={16} /> Exportar Planilha (CSV)</Button>
+      </div>
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
         <div className="relative w-full md:w-96 shrink-0">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />

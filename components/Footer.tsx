@@ -10,7 +10,7 @@ export const Footer: React.FC = () => {
           
           <div className="col-span-2 lg:col-span-2 pr-8">
             <Link to="/" className="flex items-center gap-2 mb-6 block w-max cursor-pointer hover:opacity-80 transition-opacity">
-              <img src="/logos/logo-blue.png" alt="MeiBiz Logo" className="h-12 md:h-14 w-auto object-contain" />
+              <img src="/logos/logo-blue.png?v=2" alt="MeiBiz Logo" className="h-12 md:h-14 w-auto object-contain" />
             </Link>
             <p className="text-sm text-slate-500 mb-6 leading-relaxed">
               A maior plataforma de contabilidade online do Brasil para micro e pequenas empresas. Simplificamos sua rotina para você focar no crescimento.

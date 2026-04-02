@@ -11,7 +11,7 @@ export const ChangeAccountantPage: React.FC<ChangeAccountantPageProps> = ({ onBa
     }, []);
 
     const handleWhatsAppClick = () => {
-        const phone = "5575988927727";
+        const phone = "5511914928772";
         const message = "Olá! Quero trocar de contador e trazer minha empresa para a MeiBiz.";
         window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
     };

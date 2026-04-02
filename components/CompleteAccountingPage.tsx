@@ -11,7 +11,7 @@ export const CompleteAccountingPage: React.FC<CompleteAccountingPageProps> = ({ 
     }, []);
 
     const handleWhatsAppClick = () => {
-        const phone = "5575988927727";
+        const phone = "5511914928772";
         const message = "Olá! Quero saber mais sobre os planos de contabilidade completa para MEI.";
         window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
     };

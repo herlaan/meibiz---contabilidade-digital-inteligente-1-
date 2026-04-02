@@ -65,7 +65,21 @@ export const AiChatWidget: React.FC = () => {
                 }
             });
 
-            if (error) throw error;
+            if (error) {
+                console.error("Supabase Error Object:", error);
+                
+                // Tenta extrair a mensagem de erro que vem do Body da resposta enviada pela função
+                let serverError = 'Erro desconhecido da API';
+                try {
+                    // O erro de função pode vir no context (Response)
+                    if (error.context && typeof error.context.json === 'function') {
+                        const errJson = await error.context.json();
+                        serverError = errJson.error || JSON.stringify(errJson);
+                    }
+                } catch(e) {}
+                
+                throw new Error(serverError !== 'Erro desconhecido da API' ? serverError : error.message);
+            }
 
             const newBotMessage: Message = {
                 id: (Date.now() + 1).toString(),
@@ -74,12 +88,12 @@ export const AiChatWidget: React.FC = () => {
                 timestamp: new Date()
             };
             setMessages(prev => [...prev, newBotMessage]);
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
             const errorMsg: Message = {
                 id: (Date.now() + 1).toString(),
                 type: 'bot',
-                content: 'Desculpe, estou com alguma instabilidade na minha rede neural no momento. Se precisar de urgência, entre em contato através dos nossos canais oficiais!',
+                content: `Erro técnico: ${err.message || 'Desconhecido'}. Por favor, me avise qual foi esse erro para que eu consiga arrumar!`,
                 timestamp: new Date()
             };
             setMessages(prev => [...prev, errorMsg]);
@@ -91,6 +105,8 @@ export const AiChatWidget: React.FC = () => {
     const formatTime = (date: Date) => {
         return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     };
+
+    if (!isLoggedIn) return null;
 
     return (
         <>

@@ -67,7 +67,7 @@ export const OpenMeiFree: React.FC<OpenMeiFreeProps> = ({ onBack }) => {
         e.preventDefault();
         setIsSubmitting(true);
 
-        const phone = "5575988927727";
+        const phone = "5511914928772";
         const message = `Olá equipe MeiBiz! Quero realizar a abertura gratuita do meu MEI. Seguem meus dados para análise:
 
 📝 *DADOS PESSOAIS*

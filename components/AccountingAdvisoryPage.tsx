@@ -11,7 +11,7 @@ export const AccountingAdvisoryPage: React.FC<AccountingAdvisoryPageProps> = ({ 
     }, []);
 
     const handleWhatsAppClick = () => {
-        const phone = "5575988927727";
+        const phone = "5511914928772";
         const message = "Olá! Gostaria de falar com um especialista sobre assessoria contábil para o meu MEI.";
         window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
     };

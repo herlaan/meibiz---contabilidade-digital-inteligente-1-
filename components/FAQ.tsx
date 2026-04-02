@@ -67,7 +67,7 @@ export const FAQ: React.FC = () => {
                 <p className="text-sm text-slate-500 mb-6">
                   Nosso time de especialistas está online agora para te ajudar.
                 </p>
-                <a href="https://wa.me/5575988927727?text=Ol%C3%A1!%20Tenho%20uma%20d%C3%BAvida%20sobre%20os%20servi%C3%A7os%20da%20MeiBiz." target="_blank" rel="noopener noreferrer" className="block w-full">
+                <a href="https://wa.me/5511914928772?text=Ol%C3%A1!%20Tenho%20uma%20d%C3%BAvida%20sobre%20os%20servi%C3%A7os%20da%20MeiBiz." target="_blank" rel="noopener noreferrer" className="block w-full">
                   <Button fullWidth className="bg-emerald-500 hover:bg-emerald-600 shadow-emerald-500/20">
                      Chamar no WhatsApp
                   </Button>

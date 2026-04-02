@@ -11,7 +11,7 @@ export const LeaveMeiPage: React.FC<LeaveMeiPageProps> = ({ onBack }) => {
     }, []);
 
     const handleWhatsAppClick = () => {
-        const phone = "5575988927727";
+        const phone = "5511914928772";
         const message = "Olá! Gostaria de falar com um contador sobre o desenquadramento do meu MEI.";
         window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
     };
