@@ -117,7 +117,8 @@ export const Navbar: React.FC = () => {
     }
   ];
 
-  const isActuallyScrolled = isScrolled || isMobileMenuOpen;
+  const isLightPage = ['/login', '/cadastro', '/recuperar-senha', '/redefinir-senha'].includes(location.pathname);
+  const isActuallyScrolled = isScrolled || isMobileMenuOpen || isLightPage;
   const textColorClass = isActuallyScrolled ? 'text-slate-700 hover:text-brand-600' : 'text-white/90 hover:text-white';
   const logoTextClass = isActuallyScrolled ? 'text-slate-900' : 'text-white';
   const mobileTextClass = isActuallyScrolled ? 'text-slate-900' : 'text-white';
@@ -251,7 +252,7 @@ export const Navbar: React.FC = () => {
           <div className="hidden lg:flex items-center gap-4">
             {isLoggedIn ? (
               <div className="flex items-center gap-4">
-                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${isScrolled ? 'bg-slate-100 border-slate-200 text-slate-700' : 'bg-white/10 border-white/20 text-white'}`}>
+                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${isActuallyScrolled ? 'bg-slate-100 border-slate-200 text-slate-700' : 'bg-white/10 border-white/20 text-white'}`}>
                   <User size={16} />
                   <span className="text-sm font-medium">{user?.user_metadata?.name || user?.email?.split('@')[0] || 'Usuário'}</span>
                 </div>
@@ -278,7 +279,7 @@ export const Navbar: React.FC = () => {
                   Entrar
                 </Link>
                 <Link to="/cadastro">
-                  <Button variant={isScrolled ? 'primary' : 'white'} size="sm" className="font-medium rounded-full px-6">
+                  <Button variant={isActuallyScrolled ? 'primary' : 'white'} size="sm" className="font-medium rounded-full px-6">
                     Começar agora
                   </Button>
                 </Link>

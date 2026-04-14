@@ -60,7 +60,7 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="border-t border-slate-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400">
-          <p>&copy; {new Date().getFullYear()} MeiBiz Contabilidade Ltda. Todos os direitos reservados.</p>
+          <p>&copy; {new Date().getFullYear()} MeiBiz Contabilidade Ltda. CNPJ: 63.860.520/0001-94. Todos os direitos reservados.</p>
           <div className="flex gap-6">
              <a href="#" className="hover:text-brand-600">Termos de Uso</a>
              <a href="#" className="hover:text-brand-600">Política de Privacidade</a>

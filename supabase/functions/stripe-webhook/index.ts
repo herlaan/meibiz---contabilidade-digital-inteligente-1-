@@ -22,23 +22,29 @@ serve(async (req) => {
     return new Response(`Erro: ${err.message}`, { status: 400 })
   }
 
-  if (event.type === 'checkout.session.completed') {
+  const relevantEvents = ['checkout.session.completed', 'checkout.session.async_payment_succeeded'];
+  
+  if (relevantEvents.includes(event.type)) {
     const session = event.data.object as Stripe.Checkout.Session;
     
-    // 1. MITIGAÇÃO CRÍTICA: Avaliação Obrigatória do Pagamento (Ex: Boleto pendente)
+    // 1. Validação do Pagamento
+    // Se for 'checkout.session.completed' mas não estiver pago (ex: Boleto pendente), ignoramos.
+    // O evento 'checkout.session.async_payment_succeeded' cuidará disso depois.
     if (session.payment_status !== 'paid') {
-      console.log('Sessão completa, mas pagamento não efetuado (ex: Boleto aguardando). Ignorando Upgrade temporariamente.');
-      return new Response(JSON.stringify({ received: true, status: 'unpaid_ignored' }), { status: 200 });
+      console.log(`Pagamento ainda não confirmado para sessão ${session.id}. Aguardando confirmação assíncrona.`);
+      return new Response(JSON.stringify({ received: true, status: 'waiting_payment' }), { status: 200 });
     }
 
     const userId = session.client_reference_id;
     if (!userId) {
-       return new Response('User ID ausente no client_reference', { status: 400 });
+       console.error('User ID ausente no client_reference_id');
+       return new Response('User ID ausente', { status: 400 });
     }
     
     const amountPaid = session.amount_total;
     let planType = 'premium'; // default
     
+    // Mapeamento baseado nos preços definidos em Plans.tsx
     if (amountPaid === 8900) {
       planType = 'start';
     } else if (amountPaid === 12900) {
@@ -46,7 +52,7 @@ serve(async (req) => {
     } else if (amountPaid === 16900) {
       planType = 'premium';
     } else if (session.metadata?.plano) {
-      planType = session.metadata.plano; // Tenta o metadado como último recurso
+      planType = session.metadata.plano;
     }
 
     const supabaseAdmin = createClient(
@@ -54,10 +60,20 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    await supabaseAdmin
+    const { error } = await supabaseAdmin
       .from('profiles')
-      .update({ plan_type: planType, updated_at: new Date().toISOString() })
-      .eq('id', userId)
+      .update({ 
+        plan_type: planType, 
+        updated_at: new Date().toISOString() 
+      })
+      .eq('id', userId);
+
+    if (error) {
+      console.error(`Erro ao atualizar perfil do usuário ${userId}:`, error);
+      return new Response('Erro ao atualizar DB', { status: 500 });
+    }
+
+    console.log(`Plano ${planType} liberado com sucesso para o usuário ${userId}`);
   }
 
   return new Response(JSON.stringify({ received: true }), { status: 200 })

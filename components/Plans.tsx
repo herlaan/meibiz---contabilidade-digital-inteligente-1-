@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Check, Star, Building2, Wrench } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import { Button } from './Button';
 import { TouchCarousel } from './TouchCarousel';
 
@@ -7,6 +9,25 @@ type PlanCategory = 'comercio' | 'servico';
 
 export const Plans: React.FC = () => {
   const [activeTab, setActiveTab] = useState<PlanCategory>('servico');
+  const { isLoggedIn, user, profile } = useAuth();
+  const navigate = useNavigate();
+
+  const handleHire = (link: string) => {
+    if (!isLoggedIn) {
+      navigate('/login');
+      return;
+    }
+    
+    // If logged in, pass client_reference_id for Stripe to map the payment to the user
+    try {
+      const checkoutUrl = new URL(link);
+      if (user?.id) checkoutUrl.searchParams.append('client_reference_id', user.id);
+      if (profile?.email) checkoutUrl.searchParams.append('prefilled_email', profile.email);
+      window.location.href = checkoutUrl.toString();
+    } catch (e) {
+      window.location.href = link;
+    }
+  };
 
   const basePlans = [
     {
@@ -149,7 +170,7 @@ export const Plans: React.FC = () => {
                         fullWidth
                         size="sm"
                         className="mb-6"
-                        onClick={() => window.location.href = plan.link}
+                        onClick={() => handleHire(plan.link)}
                       >
                         Contratar
                       </Button>
@@ -203,7 +224,7 @@ export const Plans: React.FC = () => {
                 variant={plan.highlight ? 'primary' : 'outline'} 
                 fullWidth
                 className="mb-8"
-                onClick={() => window.location.href = plan.link}
+                onClick={() => handleHire(plan.link)}
               >
                 Contratar
               </Button>

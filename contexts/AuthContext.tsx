@@ -8,7 +8,7 @@ export interface Profile {
   full_name: string | null;
   email: string | null;
   company_name: string | null;
-  plan_type: 'gratis' | 'completo' | string;
+  plan_type: 'gratis' | 'start' | 'essencial' | 'premium' | string;
   phone: string | null;
   document_type: 'CPF' | 'CNPJ' | string | null;
   document_number: string | null;
