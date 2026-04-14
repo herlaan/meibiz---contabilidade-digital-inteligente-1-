@@ -1,12 +1,11 @@
 -- Execute este código no SQL Editor do Supabase para preparar as tabelas necessárias para as novas funcionalidades corporativas do Dashboard
 
--- 0. Adiciona a coluna role para gerir Administradores (se ainda não existir)
+-- 0. Adiciona a coluna is_admin para gerir Administradores (se ainda não existir)
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
-                   WHERE table_name='profiles' AND column_name='role') THEN
-        ALTER TABLE public.profiles ADD COLUMN role TEXT DEFAULT 'user' 
-        CHECK (role IN ('user', 'admin'));
+                   WHERE table_name='profiles' AND column_name='is_admin') THEN
+        ALTER TABLE public.profiles ADD COLUMN is_admin BOOLEAN DEFAULT false;
     END IF;
 END $$;
 
@@ -86,7 +85,7 @@ USING (
 );
 
 -- 4. MITIGAÇÃO CRÍTICA (Escalonamento de Privilégios/Mass Assignment)
--- Impede que utilizadores comuns burlem o RLS injetando 'role=admin' ou mudando o 'plan_type' via React
+-- Impede que utilizadores comuns burlem o RLS injetando 'is_admin=true' ou mudando o 'plan_type' via React
 CREATE OR REPLACE FUNCTION public.protect_critical_columns()
 RETURNS trigger AS $$
 BEGIN
